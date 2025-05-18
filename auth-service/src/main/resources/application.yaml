@@ -24,3 +24,8 @@ eureka:
   client:
     service-url:
       defaultZone : http://localhost:8761/eureka
+
+jwt:
+  valid-duration: 300
+  refreshable-duration: 172800
+  signer-key: BWHX28bDtNd9+mWCCZ7gi52UmXIkJJzi5qqdkNZUEghdrQ7Hoal4U1B2CqFc+3uA
