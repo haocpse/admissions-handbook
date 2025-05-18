@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cocomeko_db
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:3306/cocomeko_db
+    user: root
+    password: 12345
+    locations: classpath:db/migration
+
+server:
+  port: 9000
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka
