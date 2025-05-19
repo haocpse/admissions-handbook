@@ -106,7 +106,7 @@ public class AuthService {
                     .accessToken(generateToken(user))
                     .build();
         } catch (ParseException | JOSEException e) {
-            throw new AppException(ErrorCode.INVALID_TOKEN); // custom lỗi nếu cần
+            throw new AppException(ErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -118,7 +118,7 @@ public class AuthService {
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(validDuration, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", buildScope(user.getRole()))
+                .claim("scope", user.getRole().toString())
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwtObject = new JWSObject(header, payload);
@@ -128,11 +128,6 @@ public class AuthService {
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    String buildScope(Role role) {
-        StringJoiner joiner = new StringJoiner(" ");
-        return joiner.add(role.name()).toString();
     }
 
     SignedJWT verifyToken(String token, boolean isRefresh) throws ParseException, JOSEException {

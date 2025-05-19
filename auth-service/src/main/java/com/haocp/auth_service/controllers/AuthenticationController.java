@@ -37,6 +37,13 @@ public class AuthenticationController {
                 .build();
     }
 
+    @PostMapping("/gmail-login")
+    public ApiResponse<LoginResponse> gmailLogin(@RequestBody LoginRequest request){
+        return ApiResponse.<LoginResponse>builder()
+                .data(authService.login(request))
+                .build();
+    }
+
     @PostMapping("/introspect")
     public ApiResponse<Boolean> introspect(@RequestBody VerifyTokenRequest request){
         return ApiResponse.<Boolean>builder()

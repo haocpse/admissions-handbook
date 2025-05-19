@@ -1,6 +1,8 @@
 package com.haocp.auth_service.configurations;
 
 import com.haocp.auth_service.dtos.requests.VerifyTokenRequest;
+import com.haocp.auth_service.exceptions.AppException;
+import com.haocp.auth_service.exceptions.ErrorCode;
 import com.haocp.auth_service.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +33,7 @@ public class JwtDecoderConfig implements JwtDecoder {
                 .token(token)
                 .build());
         if (!response)
-            throw new JwtException("invalid token");
+            throw new AppException(ErrorCode.INVALID_TOKEN);
         if (Objects.isNull(jwtDecoder)){
             SecretKeySpec key = new SecretKeySpec(signerKey.getBytes(), "HS512");
             jwtDecoder = NimbusJwtDecoder
