@@ -33,7 +33,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     @Autowired
     ObjectMapper objectMapper;
     @NonFinal
-    String[] publicEndpoints = {"/api/auth/**"};
+    String[] publicEndpoints = {"/api/auth/.*"};
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
