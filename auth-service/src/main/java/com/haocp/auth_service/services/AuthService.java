@@ -77,7 +77,7 @@ public class AuthService {
         try {
             verifyToken(request.getToken(), false);
         } catch (ParseException | JOSEException e) {
-            return false;
+            throw new AppException(ErrorCode.INVALID_TOKEN);
         }
         return true;
     }
