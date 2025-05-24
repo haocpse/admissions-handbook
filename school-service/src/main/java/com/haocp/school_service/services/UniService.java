@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
-import com.haocp.school_service.dtos.responses.MajorResponse;
+import com.haocp.school_service.dtos.responses.UniversityMajorResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
-import com.haocp.school_service.entities.Major;
 import com.haocp.school_service.entities.University;
+import com.haocp.school_service.entities.UniversityMajorId;
 import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.mapper.UniMapper;
 import com.haocp.school_service.repositories.MajorRepository;
@@ -33,18 +33,18 @@ public class UniService {
     @Autowired
     UniRepository uniRepository;
     @Autowired
-    UniversityMajorService universityMajorService;
-    @Autowired
     UniMapper uniMapper;
     @Autowired
     MajorService majorService;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    MajorRepository majorRepository;
 
     @Transactional
     public UniversityResponse addUniversity(AddUniversityRequest request) {
         University university = uniRepository.save(uniMapper.toUniversity(request));
-        universityMajorService.addUniversityMajor(university.getUniversityId(), request.getMajorIds());
+        addUniversityMajor(university.getUniversityId(), request.getMajorIds());
         UniversityResponse response = uniMapper.toUniversityResponse(university);
         response.setUniversityMajors(majorService.getNameMajor(request.getMajorIds()));
         return response;
@@ -72,7 +72,7 @@ public class UniService {
                         .alias(alias)
                         .main(main)
                         .build());
-                universityMajorService.addUniversityMajor(university.getUniversityId(), majorIds);
+                addUniversityMajor(university.getUniversityId(), majorIds);
                 UniversityResponse response = uniMapper.toUniversityResponse(university);
                 response.setUniversityMajors(majorService.getNameMajor(majorIds));
                 responses.add(response);
@@ -89,7 +89,7 @@ public class UniService {
             throw new RuntimeException("Error");
         String majorsJson;
         try {
-            majorsJson = new ObjectMapper().writeValueAsString(request.getMajorIds());
+            majorsJson = objectMapper.writeValueAsString(request.getMajorIds());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -98,6 +98,20 @@ public class UniService {
                 .orElseThrow(()-> new RuntimeException("Error")));
         response.setUniversityMajors(majorService.getNameMajor(request.getMajorIds()));
         return response;
+    }
+
+    @Transactional
+    void addUniversityMajor(long universityId, List<Long> majorId ) {
+
+    }
+
+    public UniversityMajorResponse getUniversityMajor(UniversityMajorId id) {
+        return UniversityMajorResponse.builder()
+                .majorName(majorRepository.getReferenceById(id.getMajorId())
+                        .getMajorName())
+                .universityName(uniRepository.getReferenceById(id.getUniversityId())
+                        .getUniversityName())
+                .build();
     }
 
 }

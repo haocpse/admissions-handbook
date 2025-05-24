@@ -38,7 +38,7 @@ public class MajorService {
     @Autowired
     UniversityMajorRepository universityMajorRepository;
     @Autowired
-    UniversityMajorService universityMajorService;
+    UniService uniService;
 
     @Transactional
     public List<MajorResponse> getNameMajor(List<Long> ids){
@@ -93,7 +93,7 @@ public class MajorService {
                 .build());
 
         return StandardScoreResponse.builder()
-                .universityMajor(universityMajorService.getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
+                .universityMajor(uniService.getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
                 .year(standardScore.getStandardScoreId().getYear())
                 .score(standardScore.getScore())
                 .build();
@@ -122,7 +122,7 @@ public class MajorService {
                         .score(Double.parseDouble(score))
                         .build());
                 responses.add(StandardScoreResponse.builder()
-                        .universityMajor(universityMajorService.getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
+                        .universityMajor(uniService.getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
                         .year(standardScore.getStandardScoreId().getYear())
                         .score(standardScore.getScore())
                         .build());

@@ -1,7 +1,9 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
+import com.haocp.school_service.dtos.requests.AddSubjectCombinationRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectRequest;
+import com.haocp.school_service.dtos.responses.SubjectCombinationResponse;
 import com.haocp.school_service.dtos.responses.SubjectResponse;
 import com.haocp.school_service.services.SubjectService;
 import lombok.AccessLevel;
@@ -28,9 +30,23 @@ public class SubjectController {
    }
 
     @PostMapping("/subject/import")
-    public ApiResponse<List<SubjectResponse>> importCSV(@RequestParam("file") MultipartFile file) {
+    public ApiResponse<List<SubjectResponse>> importSubjectByCSV(@RequestParam("file") MultipartFile file) {
         return ApiResponse.<List<SubjectResponse>>builder()
-                .data(subjectService.importCSV(file))
+                .data(subjectService.importSubjectByCSV(file))
+                .build();
+    }
+
+    @PostMapping("/subject-combo")
+    public ApiResponse<SubjectCombinationResponse> addSubjectCombination(@RequestBody AddSubjectCombinationRequest request) {
+       return ApiResponse.<SubjectCombinationResponse>builder()
+               .data(subjectService.addSubjectCombination(request))
+               .build();
+    }
+
+    @PostMapping("/subject-combo/import")
+    public ApiResponse<List<SubjectCombinationResponse>> importComboByCSV(@RequestParam("file") MultipartFile file) {
+        return ApiResponse.<List<SubjectCombinationResponse>>builder()
+                .data(subjectService.importComboByCSV(file))
                 .build();
     }
 
