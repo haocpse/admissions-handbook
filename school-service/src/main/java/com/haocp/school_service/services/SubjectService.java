@@ -39,6 +39,7 @@ public class SubjectService {
                 .build();
     }
 
+    @Transactional
     public List<SubjectResponse> importCSV(MultipartFile file){
         List<SubjectResponse> responses = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
