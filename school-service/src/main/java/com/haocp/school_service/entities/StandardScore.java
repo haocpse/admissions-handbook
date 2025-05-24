@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,21 +12,14 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "majors")
-public class Major {
+@Table(name = "standard_scores")
+public class StandardScore {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long majorId;
-
-    @Column(nullable = false, unique = true)
-    String majorName;
-
-    @OneToMany(mappedBy = "major")
-    List<UniversityMajor> universityMajors;
+    StandardScoreId standardScoreId;
 
     @Column(nullable = false)
-    boolean active = true;
+    double score;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -42,6 +34,7 @@ public class Major {
         createdAt = new Date();
         updatedAt = new Date();
     }
+
     @PreUpdate
     public void preUpdate() {
         updatedAt = new Date();

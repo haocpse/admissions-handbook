@@ -27,11 +27,17 @@ public class SubjectCombination {
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date createdAt = new Date();
+    Date createdAt;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date updatedAt = new Date();
+    Date updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
 
     @PreUpdate
     public void preUpdate() {

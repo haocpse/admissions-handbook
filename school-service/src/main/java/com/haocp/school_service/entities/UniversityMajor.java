@@ -27,15 +27,24 @@ public class UniversityMajor {
     Major major;
 
     @Column(nullable = false)
+    String codeMajor;
+
+    @Column(nullable = false)
     boolean active = true;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date createdAt = new Date();
+    Date createdAt;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date updatedAt = new Date();
+    Date updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
 
     @PreUpdate
     public void preUpdate() {
