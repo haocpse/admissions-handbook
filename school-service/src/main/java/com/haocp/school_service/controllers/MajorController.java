@@ -2,7 +2,9 @@ package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
+import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
 import com.haocp.school_service.dtos.responses.MajorResponse;
+import com.haocp.school_service.dtos.responses.StandardScoreResponse;
 import com.haocp.school_service.services.MajorService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -28,9 +30,23 @@ public class MajorController {
     }
 
     @PostMapping("/major/import")
-    public ApiResponse<List<MajorResponse>> importCSV(@RequestParam("file") MultipartFile file) {
+    public ApiResponse<List<MajorResponse>> importMajorByCSV(@RequestParam("file") MultipartFile file) {
         return ApiResponse.<List<MajorResponse>>builder()
-                .data(majorService.importCSV(file))
+                .data(majorService.importMajorByCSV(file))
+                .build();
+    }
+
+    @PostMapping("/score")
+    public ApiResponse<StandardScoreResponse> addMajorScore(@RequestBody AddStandardScoreRequest request) {
+        return ApiResponse.<StandardScoreResponse>builder()
+                .data(majorService.addStandardScore(request))
+                .build();
+    }
+
+    @PostMapping("/score/import")
+    public ApiResponse<List<StandardScoreResponse>> importScoreByCSV(@RequestParam("file") MultipartFile file) {
+        return ApiResponse.<List<StandardScoreResponse>>builder()
+                .data(majorService.importScoreByCSV(file))
                 .build();
     }
 
