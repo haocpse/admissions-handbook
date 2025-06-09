@@ -23,8 +23,8 @@ public class Subject {
     @Column(nullable = false, unique = true)
     String subjectName;
 
-    @ManyToMany(mappedBy = "subjects")
-    List<SubjectCombination> subjectCombinations;
+    @OneToMany(mappedBy = "subjects")
+    List<ComboSubject> comboSubjects;
 
     @Column(nullable = false)
     boolean active = true;

@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,24 +12,21 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "majors")
-public class Major {
+@Table(name = "combo_subjects")
+public class ComboSubject {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long majorId;
+    @EmbeddedId
+    ComboSubjectId comboSubjectId;
 
-    @Column(nullable = false, unique = true)
-    String majorName;
+    @ManyToOne
+    @MapsId("codeCombination")
+    SubjectCombination subjectCombination;
 
-    @OneToMany(mappedBy = "major")
-    List<MajorCombo> majorCombos;
-
-    @OneToMany(mappedBy = "major")
-    List<UniversityMajor> universityMajors;
+    @ManyToOne
+    @MapsId("subjectId")
+    Subject subject;
 
     @Column(nullable = false)
-    @Builder.Default
     boolean active = true;
 
     @Column(nullable = false, updatable = false)
@@ -46,9 +42,9 @@ public class Major {
         createdAt = new Date();
         updatedAt = new Date();
     }
+
     @PreUpdate
     public void preUpdate() {
         updatedAt = new Date();
     }
-
 }

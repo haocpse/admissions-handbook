@@ -19,11 +19,11 @@ public class SubjectCombination {
     @Id
     String codeCombination;
 
-    @ManyToMany
-    List<Subject> subjects;
+    @OneToMany(mappedBy = "subject_combinations")
+    List<ComboSubject> comboSubjects;
 
-    @ManyToMany(mappedBy = "subjectCombinations")
-    List<Major> majors;
+    @OneToMany(mappedBy = "subject_combinations")
+    List<MajorCombo> majorCombos;
 
     @Column(nullable = false)
     boolean active = true;

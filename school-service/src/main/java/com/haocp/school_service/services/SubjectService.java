@@ -7,9 +7,8 @@ import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.SubjectCombinationResponse;
 import com.haocp.school_service.dtos.responses.SubjectResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
-import com.haocp.school_service.entities.Major;
-import com.haocp.school_service.entities.Subject;
-import com.haocp.school_service.entities.SubjectCombination;
+import com.haocp.school_service.entities.*;
+import com.haocp.school_service.repositories.ComboSubjectRepository;
 import com.haocp.school_service.repositories.SubjectCombinationRepository;
 import com.haocp.school_service.repositories.SubjectRepository;
 import com.opencsv.CSVReader;
@@ -34,6 +33,8 @@ public class SubjectService {
     SubjectRepository subjectRepository;
     @Autowired
     SubjectCombinationRepository subjectCombinationRepository;
+    @Autowired
+    ComboSubjectRepository comboSubjectRepository;
 
     @Transactional
     public SubjectResponse addSubject(AddSubjectRequest request) {
@@ -70,17 +71,19 @@ public class SubjectService {
 
     @Transactional
     public SubjectCombinationResponse addSubjectCombination(AddSubjectCombinationRequest request) {
-        List<Subject> subjects = getListSubject(request.getSubjectIds());
-
         SubjectCombination subjectCombination = subjectCombinationRepository.save(
                 SubjectCombination.builder()
                         .codeCombination(request.getCodeCombination())
-                        .subjects(subjects)
                         .build()
         );
+
+        List<ComboSubject> comboSubjects = majorComboBuilder(subjectCombination.getCodeCombination(), request.getSubjectIds());
+
         return SubjectCombinationResponse.builder()
                 .codeCombination(subjectCombination.getCodeCombination())
-                .subjectName(subjectCombination.getSubjects().stream().map(Subject::getSubjectName).toList())
+                .subjectName(comboSubjects.stream()
+                        .map(cs -> cs.getSubject().getSubjectName())
+                        .toList())
                 .build();
     }
 
@@ -115,6 +118,21 @@ public class SubjectService {
         return subjectIds.stream()
                 .map(id -> subjectRepository.getReferenceById(id))
                 .toList();
+    }
+
+    @Transactional
+    List<ComboSubject> majorComboBuilder(String comboName, List<Long> subjectIds) {
+        List<ComboSubject> comboSubjects = subjectIds.stream()
+                .map(subjectId -> ComboSubject.builder()
+                        .comboSubjectId(ComboSubjectId.builder()
+                                .codeCombination(comboName)
+                                .subjectId(subjectId)
+                                .build())
+                        .subjectCombination(subjectCombinationRepository.getReferenceById(comboName))
+                        .subject(subjectRepository.getReferenceById(subjectId))
+                        .build())
+                .toList();
+        return comboSubjectRepository.saveAll(comboSubjects);
     }
 
 
