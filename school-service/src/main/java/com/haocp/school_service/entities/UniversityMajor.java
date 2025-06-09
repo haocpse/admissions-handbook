@@ -26,7 +26,7 @@ public class UniversityMajor {
     @MapsId("majorId")
     Major major;
 
-    @Column(nullable = false)
+    @Column
     String codeMajor;
 
     @Column(nullable = false)

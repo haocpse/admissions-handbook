@@ -6,12 +6,12 @@ import com.haocp.school_service.dtos.requests.AddUniversityRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
 import com.haocp.school_service.dtos.responses.UniversityMajorResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
-import com.haocp.school_service.entities.University;
-import com.haocp.school_service.entities.UniversityMajorId;
+import com.haocp.school_service.entities.*;
 import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.mapper.UniMapper;
 import com.haocp.school_service.repositories.MajorRepository;
 import com.haocp.school_service.repositories.UniRepository;
+import com.haocp.school_service.repositories.UniversityMajorRepository;
 import com.opencsv.CSVReader;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -40,6 +40,8 @@ public class UniService {
     ObjectMapper objectMapper;
     @Autowired
     MajorRepository majorRepository;
+    @Autowired
+    UniversityMajorRepository universityMajorRepository;
 
     @Transactional
     public UniversityResponse addUniversity(AddUniversityRequest request) {
@@ -101,17 +103,18 @@ public class UniService {
     }
 
     @Transactional
-    void addUniversityMajor(long universityId, List<Long> majorId ) {
-
-    }
-
-    public UniversityMajorResponse getUniversityMajor(UniversityMajorId id) {
-        return UniversityMajorResponse.builder()
-                .majorName(majorRepository.getReferenceById(id.getMajorId())
-                        .getMajorName())
-                .universityName(uniRepository.getReferenceById(id.getUniversityId())
-                        .getUniversityName())
-                .build();
+    void addUniversityMajor(long universityId, List<Long> majorIds ) {
+        List<UniversityMajor> universityMajors = majorIds.stream()
+                .map(majorId -> UniversityMajor.builder()
+                        .id(UniversityMajorId.builder()
+                                .universityId(universityId)
+                                .majorId(majorId)
+                                .build())
+                        .major(majorRepository.getReferenceById(majorId))
+                        .university(uniRepository.getReferenceById(universityId))
+                        .build())
+                .toList();
+        universityMajorRepository.saveAll(universityMajors);
     }
 
 }

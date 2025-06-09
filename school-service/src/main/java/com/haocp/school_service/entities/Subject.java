@@ -25,6 +25,9 @@ public class Subject {
     @ManyToMany(mappedBy = "subjects")
     List<SubjectCombination> subjectCombinations;
 
+    @ManyToMany(mappedBy = "subjects")
+    List<Major> majors;
+
     @Column(nullable = false)
     boolean active = true;
 

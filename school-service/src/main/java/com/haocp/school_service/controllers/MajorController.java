@@ -36,6 +36,13 @@ public class MajorController {
                 .build();
     }
 
+    @PostMapping("/major/combo")
+    public ApiResponse<MajorResponse> addMajor(@RequestBody AddMajorRequest addMajorRequest) {
+        return ApiResponse.<MajorResponse>builder()
+                .data(majorService.addMajor(addMajorRequest))
+                .build();
+    }
+
     @PostMapping("/score")
     public ApiResponse<StandardScoreResponse> addMajorScore(@RequestBody AddStandardScoreRequest request) {
         return ApiResponse.<StandardScoreResponse>builder()

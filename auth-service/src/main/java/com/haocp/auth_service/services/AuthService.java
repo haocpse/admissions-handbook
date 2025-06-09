@@ -39,8 +39,6 @@ public class AuthService {
     @Autowired
     AuthRepository authRepository;
     @Autowired
-    UserMapper userMapper;
-    @Autowired
     PasswordEncoder passwordEncoder;
     @Value("${jwt.signer-key}") @NonFinal
     String signerKey;
@@ -50,6 +48,8 @@ public class AuthService {
     int refreshDuration;
     @Autowired
     InvalidTokenRepository invalidTokenRepository;
+    @Autowired
+    UserMapper userMapper;
 
     public UserResponse register(CreateUserRequest request) {
         User user = User.builder()

@@ -1,6 +1,20 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    discovery:
+      locator:
+        enable: true
+    gateway:
+      routes[0]:
+        id: auth-service-route
+        uri: lb://AUTH-SERVICE
+        predicates: Path=/api/auth/**
+      routes[1]:
+        id: school-service-route
+        uri: lb://SCHOOL-SERVICE
+        predicates: Path=/api/school/**
+
 
 server:
   port: 8080

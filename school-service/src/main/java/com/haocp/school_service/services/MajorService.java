@@ -4,12 +4,14 @@ import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.StandardScoreResponse;
+import com.haocp.school_service.dtos.responses.UniversityMajorResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
 import com.haocp.school_service.entities.*;
 import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.mapper.MajorMapper;
 import com.haocp.school_service.repositories.MajorRepository;
 import com.haocp.school_service.repositories.StandardScoreRepository;
+import com.haocp.school_service.repositories.UniRepository;
 import com.haocp.school_service.repositories.UniversityMajorRepository;
 import com.opencsv.CSVReader;
 import lombok.AccessLevel;
@@ -38,7 +40,7 @@ public class MajorService {
     @Autowired
     UniversityMajorRepository universityMajorRepository;
     @Autowired
-    UniService uniService;
+    UniRepository uniRepository;
 
     @Transactional
     public List<MajorResponse> getNameMajor(List<Long> ids){
@@ -81,19 +83,30 @@ public class MajorService {
 
     @Transactional
     public StandardScoreResponse addStandardScore(AddStandardScoreRequest request) {
-        if(!universityMajorRepository.existsById(request.getUniversityMajorId()))
-            throw new RuntimeException("University major doesn't exist");
+        UniversityMajor universityMajor = universityMajorRepository.findById(
+                UniversityMajorId.builder()
+                        .majorId(request.getMajorId())
+                        .universityId(request.getUniversityId())
+                        .build()
+        ).orElseThrow(() -> new RuntimeException("University major doesn't exist"));
+
 
         StandardScore standardScore = standardScoreRepository.save(StandardScore.builder()
                 .standardScoreId(StandardScoreId.builder()
-                        .universityMajorId(request.getUniversityMajorId())
+                        .universityMajorId(
+                                UniversityMajorId.builder()
+                                        .majorId(request.getMajorId())
+                                        .universityId(request.getUniversityId())
+                                        .build()
+                        )
                         .year(request.getYear())
                         .build())
+                        .universityMajor(universityMajor)
                 .score(request.getScore())
                 .build());
 
         return StandardScoreResponse.builder()
-                .universityMajor(uniService.getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
+                .universityMajor(getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
                 .year(standardScore.getStandardScoreId().getYear())
                 .score(standardScore.getScore())
                 .build();
@@ -122,7 +135,7 @@ public class MajorService {
                         .score(Double.parseDouble(score))
                         .build());
                 responses.add(StandardScoreResponse.builder()
-                        .universityMajor(uniService.getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
+                        .universityMajor(getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
                         .year(standardScore.getStandardScoreId().getYear())
                         .score(standardScore.getScore())
                         .build());
@@ -131,5 +144,14 @@ public class MajorService {
             throw new RuntimeException("Failed to parse CSV", e);
         }
         return responses;
+    }
+
+    UniversityMajorResponse getUniversityMajor(UniversityMajorId id) {
+        return UniversityMajorResponse.builder()
+                .majorName(majorRepository.getReferenceById(id.getMajorId())
+                        .getMajorName())
+                .universityName(uniRepository.getReferenceById(id.getUniversityId())
+                        .getUniversityName())
+                .build();
     }
 }

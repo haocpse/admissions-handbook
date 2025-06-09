@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Date;
 import java.util.Set;
 
 @Configuration
@@ -21,12 +22,15 @@ public class ApplicationConfig {
     ApplicationRunner applicationRunner(AuthRepository authRepo) {
         return args -> {
             if (authRepo.findByUsername("admin").isEmpty()){
-                authRepo.save(User.builder()
+                User user = User.builder()
                         .email("admin@admin.com")
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
                         .role(Role.ADMIN)
-                        .build());
+                        .createdAt(new Date())
+                        .updatedAt(new Date())
+                        .build();
+                authRepo.save(user);
             }
         };
     }

@@ -15,11 +15,22 @@ import java.util.Date;
 @Table(name = "standard_scores")
 public class StandardScore {
 
-    @Id
+    @EmbeddedId
     StandardScoreId standardScoreId;
+
+    @ManyToOne
+    @MapsId("universityMajorId")
+    @JoinColumns({
+            @JoinColumn(name = "university_university_id", referencedColumnName = "university_university_id"),
+            @JoinColumn(name = "major_major_id", referencedColumnName = "major_major_id")
+    })
+    UniversityMajor universityMajor;
 
     @Column(nullable = false)
     double score;
+
+    @Column
+    String note;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

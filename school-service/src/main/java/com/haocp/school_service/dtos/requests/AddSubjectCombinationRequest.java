@@ -12,6 +12,6 @@ import java.util.List;
 public class AddSubjectCombinationRequest {
 
     String codeCombination;
-    List<String> subjectName;
+    List<Long> subjectIds;
 
 }

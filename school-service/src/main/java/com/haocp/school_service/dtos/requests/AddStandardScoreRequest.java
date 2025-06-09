@@ -11,7 +11,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class AddStandardScoreRequest {
 
-    UniversityMajorId UniversityMajorId;
+    long universityId;
+    long majorId;
     int year;
     double score;
 

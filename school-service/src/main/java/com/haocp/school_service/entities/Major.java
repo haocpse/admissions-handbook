@@ -18,15 +18,19 @@ public class Major {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long majorId;
+    Long majorId;
 
     @Column(nullable = false, unique = true)
     String majorName;
+
+    @ManyToMany
+    List<Subject> subjects;
 
     @OneToMany(mappedBy = "major")
     List<UniversityMajor> universityMajors;
 
     @Column(nullable = false)
+    @Builder.Default
     boolean active = true;
 
     @Column(nullable = false, updatable = false)

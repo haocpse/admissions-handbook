@@ -70,7 +70,7 @@ public class SubjectService {
 
     @Transactional
     public SubjectCombinationResponse addSubjectCombination(AddSubjectCombinationRequest request) {
-        List<Subject> subjects = getListSubjectByName(request.getSubjectName());
+        List<Subject> subjects = getListSubject(request.getSubjectIds());
 
         SubjectCombination subjectCombination = subjectCombinationRepository.save(
                 SubjectCombination.builder()
@@ -84,37 +84,36 @@ public class SubjectService {
                 .build();
     }
 
-    @Transactional
-    public List<SubjectCombinationResponse> importComboByCSV(MultipartFile file){
-        List<SubjectCombinationResponse> responses = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-             CSVReader csvReader = new CSVReader(reader)) {
-            String[] line;
-            csvReader.readNext();
-            while ((line = csvReader.readNext()) != null) {
-                String code = line[0].trim();
-                List<String> name = Arrays.stream(line[1].split("\\|"))
-                        .map(String::trim)
-                        .toList();
-                SubjectCombination subjectCombination = subjectCombinationRepository.save(SubjectCombination.builder()
-                        .codeCombination(code)
-                        .subjects(getListSubjectByName(name))
-                        .build());
-                responses.add(SubjectCombinationResponse.builder()
-                        .codeCombination(subjectCombination.getCodeCombination())
-                        .subjectName(subjectCombination.getSubjects().stream().map(Subject::getSubjectName).toList())
-                        .build());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse CSV", e);
-        }
-        return responses;
-    }
+//    @Transactional
+//    public List<SubjectCombinationResponse> importComboByCSV(MultipartFile file){
+//        List<SubjectCombinationResponse> responses = new ArrayList<>();
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+//             CSVReader csvReader = new CSVReader(reader)) {
+//            String[] line;
+//            csvReader.readNext();
+//            while ((line = csvReader.readNext()) != null) {
+//                String code = line[0].trim();
+//                List<String> name = Arrays.stream(line[1].split("\\|"))
+//                        .map(String::trim)
+//                        .toList();
+//                SubjectCombination subjectCombination = subjectCombinationRepository.save(SubjectCombination.builder()
+//                        .codeCombination(code)
+//                        .subjects(getListSubject(name))
+//                        .build());
+//                responses.add(SubjectCombinationResponse.builder()
+//                        .codeCombination(subjectCombination.getCodeCombination())
+//                        .subjectName(subjectCombination.getSubjects().stream().map(Subject::getSubjectName).toList())
+//                        .build());
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException("Failed to parse CSV", e);
+//        }
+//        return responses;
+//    }
 
-    List<Subject> getListSubjectByName(List<String> subjectNames) {
-        return subjectNames.stream()
-                .map(name -> subjectRepository.findBySubjectName(name)
-                        .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + name)))
+    List<Subject> getListSubject(List<Long> subjectIds) {
+        return subjectIds.stream()
+                .map(id -> subjectRepository.getReferenceById(id))
                 .toList();
     }
 

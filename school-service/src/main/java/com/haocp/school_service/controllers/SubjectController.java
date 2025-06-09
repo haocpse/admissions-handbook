@@ -43,11 +43,11 @@ public class SubjectController {
                .build();
     }
 
-    @PostMapping("/subject-combo/import")
-    public ApiResponse<List<SubjectCombinationResponse>> importComboByCSV(@RequestParam("file") MultipartFile file) {
-        return ApiResponse.<List<SubjectCombinationResponse>>builder()
-                .data(subjectService.importComboByCSV(file))
-                .build();
-    }
+//    @PostMapping("/subject-combo/import")
+//    public ApiResponse<List<SubjectCombinationResponse>> importComboByCSV(@RequestParam("file") MultipartFile file) {
+//        return ApiResponse.<List<SubjectCombinationResponse>>builder()
+//                .data(subjectService.importComboByCSV(file))
+//                .build();
+//    }
 
 }
