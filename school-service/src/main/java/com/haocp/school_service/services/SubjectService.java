@@ -114,12 +114,6 @@ public class SubjectService {
 //        return responses;
 //    }
 
-    List<Subject> getListSubject(List<Long> subjectIds) {
-        return subjectIds.stream()
-                .map(id -> subjectRepository.getReferenceById(id))
-                .toList();
-    }
-
     @Transactional
     List<ComboSubject> majorComboBuilder(String comboName, List<Long> subjectIds) {
         List<ComboSubject> comboSubjects = subjectIds.stream()
