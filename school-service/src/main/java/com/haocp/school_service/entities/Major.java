@@ -24,7 +24,12 @@ public class Major {
     String majorName;
 
     @ManyToMany
-    List<Subject> subjects;
+    @JoinTable(
+            name = "majors_subject_combinations",
+            joinColumns = @JoinColumn(name = "major_major_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_combinations_code_combination")
+    )
+    List<SubjectCombination> subjectCombinations;
 
     @OneToMany(mappedBy = "major")
     List<UniversityMajor> universityMajors;

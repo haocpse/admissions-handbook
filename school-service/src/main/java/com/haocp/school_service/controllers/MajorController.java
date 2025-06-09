@@ -1,8 +1,10 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
+import com.haocp.school_service.dtos.requests.AddMajorComboRequest;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
+import com.haocp.school_service.dtos.responses.MajorComboResponse;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.StandardScoreResponse;
 import com.haocp.school_service.services.MajorService;
@@ -37,9 +39,9 @@ public class MajorController {
     }
 
     @PostMapping("/major/combo")
-    public ApiResponse<MajorResponse> addMajor(@RequestBody AddMajorRequest addMajorRequest) {
-        return ApiResponse.<MajorResponse>builder()
-                .data(majorService.addMajor(addMajorRequest))
+    public ApiResponse<MajorComboResponse> addMajorCombo(@RequestBody AddMajorComboRequest addMajorRequest) {
+        return ApiResponse.<MajorComboResponse>builder()
+                .data(majorService.addMajorCombo(addMajorRequest))
                 .build();
     }
 

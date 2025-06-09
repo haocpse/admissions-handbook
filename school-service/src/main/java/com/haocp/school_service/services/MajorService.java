@@ -1,18 +1,13 @@
 package com.haocp.school_service.services;
 
+import com.haocp.school_service.dtos.requests.AddMajorComboRequest;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
-import com.haocp.school_service.dtos.responses.MajorResponse;
-import com.haocp.school_service.dtos.responses.StandardScoreResponse;
-import com.haocp.school_service.dtos.responses.UniversityMajorResponse;
-import com.haocp.school_service.dtos.responses.UniversityResponse;
+import com.haocp.school_service.dtos.responses.*;
 import com.haocp.school_service.entities.*;
 import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.mapper.MajorMapper;
-import com.haocp.school_service.repositories.MajorRepository;
-import com.haocp.school_service.repositories.StandardScoreRepository;
-import com.haocp.school_service.repositories.UniRepository;
-import com.haocp.school_service.repositories.UniversityMajorRepository;
+import com.haocp.school_service.repositories.*;
 import com.opencsv.CSVReader;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +36,8 @@ public class MajorService {
     UniversityMajorRepository universityMajorRepository;
     @Autowired
     UniRepository uniRepository;
+    @Autowired
+    SubjectCombinationRepository subjectCombinationRepository;
 
     @Transactional
     public List<MajorResponse> getNameMajor(List<Long> ids){
@@ -146,6 +143,18 @@ public class MajorService {
         return responses;
     }
 
+    public MajorComboResponse addMajorCombo(AddMajorComboRequest request) {
+        Major major = majorRepository.findById(request.getMajorId()).orElseThrow(
+                () -> new RuntimeException("Major doesn't exist"));
+        List<SubjectCombination> subjectCombinations = getListSubjectCombination(request.getCodeCombinations());
+        major.setSubjectCombinations(subjectCombinations);
+        majorRepository.save(major);
+        return MajorComboResponse.builder()
+                .majorName(major.getMajorName())
+                .codeCombination(major.getSubjectCombinations().stream().map(SubjectCombination::getCodeCombination).toList())
+                .build();
+    }
+
     UniversityMajorResponse getUniversityMajor(UniversityMajorId id) {
         return UniversityMajorResponse.builder()
                 .majorName(majorRepository.getReferenceById(id.getMajorId())
@@ -154,4 +163,11 @@ public class MajorService {
                         .getUniversityName())
                 .build();
     }
+
+    List<SubjectCombination> getListSubjectCombination(List<String> codeCombinations) {
+        return codeCombinations.stream()
+                .map(id -> subjectCombinationRepository.getReferenceById(id))
+                .toList();
+    }
+
 }
