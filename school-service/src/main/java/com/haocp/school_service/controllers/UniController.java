@@ -28,6 +28,13 @@ public class UniController {
                 .build();
     }
 
+    @GetMapping("/uni/{universityId}")
+    public ApiResponse<UniversityResponse> getUniversity(@PathVariable Long universityId){
+        return ApiResponse.<UniversityResponse>builder()
+                .data(uniService.getUniversity(universityId))
+                .build();
+    }
+
     @PostMapping("/uni")
     public ApiResponse<UniversityResponse> addUniversity(@RequestBody AddUniversityRequest request){
         return ApiResponse.<UniversityResponse>builder()

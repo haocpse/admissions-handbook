@@ -7,6 +7,7 @@ import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
 import com.haocp.school_service.dtos.responses.MajorComboResponse;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.StandardScoreResponse;
+import com.haocp.school_service.dtos.responses.UniversityResponse;
 import com.haocp.school_service.services.MajorService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +24,20 @@ public class MajorController {
 
     @Autowired
     MajorService majorService;
+
+    @GetMapping("/major")
+    public ApiResponse<List<MajorResponse>> majors(){
+        return ApiResponse.<List<MajorResponse>>builder()
+                .data(majorService.majors())
+                .build();
+    }
+
+    @GetMapping("/major/{majorId}")
+    public ApiResponse<MajorResponse> getMajor(@PathVariable Long majorId){
+        return ApiResponse.<MajorResponse>builder()
+                .data(majorService.getMajor(majorId))
+                .build();
+    }
 
     @PostMapping("/major")
     public ApiResponse<MajorResponse> addMajor(@RequestBody AddMajorRequest addMajorRequest) {

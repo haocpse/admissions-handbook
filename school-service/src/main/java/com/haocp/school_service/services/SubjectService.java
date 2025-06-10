@@ -129,5 +129,36 @@ public class SubjectService {
         return comboSubjectRepository.saveAll(comboSubjects);
     }
 
+    public List<SubjectResponse> subjects() {
+        return subjectRepository.findAll().stream().map(
+                subject ->
+                     SubjectResponse.builder()
+                            .subjectName(subject.getSubjectName())
+                            .build()
+        ).toList();
+    }
+
+    public List<SubjectCombinationResponse> comboSubjects() {
+        return subjectCombinationRepository.findAll().stream().map(
+                combo ->
+                        SubjectCombinationResponse.builder()
+                                .codeCombination(combo.getCodeCombination())
+                                .subjectName(null)
+                                .build()
+        ).toList();
+    }
+
+    public SubjectCombinationResponse getComboSubject(String codeCombination) {
+        List<ComboSubject> comboSubjects = comboSubjectRepository.findBySubjectCombinationCodeCombination(codeCombination)
+                .orElseThrow(() -> new RuntimeException("Error at getComboSubject"));
+        return SubjectCombinationResponse.builder()
+                .codeCombination(codeCombination)
+                .subjectName(comboSubjects.stream()
+                        .map(
+                                comboSubject -> comboSubject.getSubject().getSubjectName()
+                        )
+                        .toList())
+                .build();
+    }
 
 }

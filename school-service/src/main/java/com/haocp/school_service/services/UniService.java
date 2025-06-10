@@ -136,4 +136,17 @@ public class UniService {
                 })
                 .toList();
     }
+
+    public UniversityResponse getUniversity(Long universityId) {
+        University university = uniRepository.findById(universityId)
+                .orElseThrow(() -> new RuntimeException("University not found for ID: " + universityId));
+        List<UniversityMajor> universityMajors = universityMajorRepository
+                .findByUniversityUniversityId(university.getUniversityId()).orElseThrow(() -> new RuntimeException("Error at getUniversity function"));
+        List<Long> majorIds = universityMajors.stream()
+                .map(um -> um.getMajor().getMajorId())
+                .toList();
+        UniversityResponse response = uniMapper.toUniversityResponse(university);
+        response.setUniversityMajors(majorService.getNameMajor(majorIds));
+        return response;
+    }
 }

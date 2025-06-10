@@ -1,8 +1,10 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
+import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectCombinationRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectRequest;
+import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.SubjectCombinationResponse;
 import com.haocp.school_service.dtos.responses.SubjectResponse;
 import com.haocp.school_service.services.SubjectService;
@@ -21,6 +23,27 @@ public class SubjectController {
 
    @Autowired
    SubjectService subjectService;
+
+    @GetMapping("/subject")
+    public ApiResponse<List<SubjectResponse>> subjects(){
+        return ApiResponse.<List<SubjectResponse>>builder()
+                .data(subjectService.subjects())
+                .build();
+    }
+
+    @GetMapping("/subject-combo")
+    public ApiResponse<List<SubjectCombinationResponse>> comboSubjects(){
+        return ApiResponse.<List<SubjectCombinationResponse>>builder()
+                .data(subjectService.comboSubjects())
+                .build();
+    }
+
+    @GetMapping("/subject-combo/{codeCombination}")
+    public ApiResponse<SubjectCombinationResponse> getSubject(@PathVariable String codeCombination){
+        return ApiResponse.<SubjectCombinationResponse>builder()
+                .data(subjectService.getComboSubject(codeCombination))
+                .build();
+    }
 
    @PostMapping("/subject")
    public ApiResponse<SubjectResponse> addSubject(@RequestBody AddSubjectRequest request) {
