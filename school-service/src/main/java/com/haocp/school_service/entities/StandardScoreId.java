@@ -14,7 +14,8 @@ import java.io.Serializable;
 @Builder
 public class StandardScoreId implements Serializable {
 
-    UniversityMajorId universityMajorId;
+    long universityId;
+    long majorId;
     int year;
 
 }

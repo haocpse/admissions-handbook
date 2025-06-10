@@ -19,12 +19,12 @@ public class StandardScore {
     StandardScoreId standardScoreId;
 
     @ManyToOne
-    @MapsId("universityMajorId")
-    @JoinColumns({
-            @JoinColumn(name = "university_university_id", referencedColumnName = "university_university_id"),
-            @JoinColumn(name = "major_major_id", referencedColumnName = "major_major_id")
-    })
-    UniversityMajor universityMajor;
+    @MapsId("universityId")
+    University university;
+
+    @ManyToOne
+    @MapsId("majorId")
+    Major major;
 
     @Column(nullable = false)
     double score;

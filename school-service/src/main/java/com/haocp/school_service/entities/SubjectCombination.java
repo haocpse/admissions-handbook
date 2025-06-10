@@ -19,10 +19,10 @@ public class SubjectCombination {
     @Id
     String codeCombination;
 
-    @OneToMany(mappedBy = "subject_combinations")
+    @OneToMany(mappedBy = "subjectCombination")
     List<ComboSubject> comboSubjects;
 
-    @OneToMany(mappedBy = "subject_combinations")
+    @OneToMany(mappedBy = "subjectCombination")
     List<MajorCombo> majorCombos;
 
     @Column(nullable = false)

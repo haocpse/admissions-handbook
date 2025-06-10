@@ -90,20 +90,17 @@ public class MajorService {
         ).orElseThrow(() -> new RuntimeException("University major doesn't exist"));
         StandardScore standardScore = standardScoreRepository.save(StandardScore.builder()
                 .standardScoreId(StandardScoreId.builder()
-                        .universityMajorId(
-                                UniversityMajorId.builder()
-                                        .majorId(request.getMajorId())
-                                        .universityId(request.getUniversityId())
-                                        .build()
-                        )
-                        .year(request.getYear())
-                        .build())
-                        .universityMajor(universityMajor)
+                            .majorId(request.getMajorId())
+                            .universityId(request.getUniversityId())
+                            .year(request.getYear())
+                            .build())
+                        .university(uniRepository.getReferenceById(request.getUniversityId()))
+                        .major(majorRepository.getReferenceById(request.getMajorId()))
                 .score(request.getScore())
                 .build());
 
         return StandardScoreResponse.builder()
-                .universityMajor(getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
+                .universityMajor(getUniversityMajor(universityMajor.getId()))
                 .year(standardScore.getStandardScoreId().getYear())
                 .score(standardScore.getScore())
                 .build();
@@ -123,18 +120,22 @@ public class MajorService {
                 String score = line[3].trim();
                 StandardScore standardScore = standardScoreRepository.save(StandardScore.builder()
                         .standardScoreId(StandardScoreId.builder()
-                                .universityMajorId(UniversityMajorId.builder()
-                                        .universityId(Long.parseLong(uniId))
-                                        .majorId(Long.parseLong(majorId))
-                                        .build())
-                                .year(Integer.parseInt(year))
+                                    .majorId(Long.parseLong(majorId))
+                                    .universityId(Long.parseLong(uniId))
+                                    .year(Integer.parseInt(year))
                                 .build())
                         .score(Double.parseDouble(score))
                         .build());
+                UniversityMajor universityMajor = universityMajorRepository.findById(
+                        UniversityMajorId.builder()
+                                .majorId(standardScore.getMajor().getMajorId())
+                                .universityId(standardScore.getUniversity().getUniversityId())
+                                .build()
+                ).orElseThrow(() -> new RuntimeException("University major doesn't exist"));
                 responses.add(StandardScoreResponse.builder()
-                        .universityMajor(getUniversityMajor(standardScore.getStandardScoreId().getUniversityMajorId()))
-                        .year(standardScore.getStandardScoreId().getYear())
-                        .score(standardScore.getScore())
+                                .universityMajor(getUniversityMajor(universityMajor.getId()))
+                                .year(standardScore.getStandardScoreId().getYear())
+                                .score(standardScore.getScore())
                         .build());
             }
         } catch (Exception e) {

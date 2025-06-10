@@ -29,6 +29,9 @@ public class UniversityMajor {
     @Column
     String codeMajor;
 
+    @Column
+    Long tuition;
+
     @Column(nullable = false)
     boolean active = true;
 

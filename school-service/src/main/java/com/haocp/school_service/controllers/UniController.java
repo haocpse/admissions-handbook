@@ -21,6 +21,13 @@ public class UniController {
     @Autowired
     UniService uniService;
 
+    @GetMapping("/uni")
+    public ApiResponse<List<UniversityResponse>> universities(){
+        return ApiResponse.<List<UniversityResponse>>builder()
+                .data(uniService.universities())
+                .build();
+    }
+
     @PostMapping("/uni")
     public ApiResponse<UniversityResponse> addUniversity(@RequestBody AddUniversityRequest request){
         return ApiResponse.<UniversityResponse>builder()

@@ -117,4 +117,23 @@ public class UniService {
         universityMajorRepository.saveAll(universityMajors);
     }
 
+    public List<UniversityResponse> universities() {
+        List<University> universities = uniRepository.findAll();
+        return universities.stream()
+                .map(university -> {
+                    UniversityResponse response = uniMapper.toUniversityResponse(university);
+
+                    List<UniversityMajor> universityMajors = universityMajorRepository
+                            .findByUniversityUniversityId(university.getUniversityId())
+                            .orElseThrow(() -> new RuntimeException("University majors not found for ID: " + university.getUniversityId()));
+
+                    List<Long> majorIds = universityMajors.stream()
+                            .map(um -> um.getMajor().getMajorId())
+                            .toList();
+
+                    response.setUniversityMajors(majorService.getNameMajor(majorIds));
+                    return response;
+                })
+                .toList();
+    }
 }

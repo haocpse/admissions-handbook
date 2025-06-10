@@ -23,7 +23,7 @@ public class Subject {
     @Column(nullable = false, unique = true)
     String subjectName;
 
-    @OneToMany(mappedBy = "subjects")
+    @OneToMany(mappedBy = "subject")
     List<ComboSubject> comboSubjects;
 
     @Column(nullable = false)
