@@ -102,29 +102,34 @@ public class MajorService {
 
     @Transactional
     public MajorComboResponse addMajorCombo(AddMajorComboRequest request) {
-        Major major = majorRepository.getReferenceById(request.getMajorId());
-        List<MajorCombo> majorCombos = majorComboBuilder(major.getMajorId(), request.getCodeCombinations());
+        UniversityMajor universityMajor = universityMajorRepository.findById(UniversityMajorId.builder()
+                        .universityId(request.getUniversityId())
+                        .majorId(request.getMajorId()).build())
+                .orElse(universityMajorRepository.save(UniversityMajor.builder()
+                        .id(UniversityMajorId.builder()
+                                .universityId(request.getUniversityId())
+                                .majorId(request.getMajorId())
+                                .build())
+                        .major(majorRepository.getReferenceById(request.getMajorId()))
+                        .university(uniRepository.getReferenceById(request.getUniversityId()))
+                .build()));
+        List<MajorCombo> majorCombos = majorComboBuilder(universityMajor, request.getCodeCombinations());
         return MajorComboResponse.builder()
-                .majorName(major.getMajorName())
+                .universityName(universityMajor.getUniversity().getUniversityName())
+                .majorName(universityMajor.getMajor().getMajorName())
                 .codeCombination(majorCombos.stream()
                         .map(mc -> mc.getSubjectCombination().getCodeCombination())
                         .toList())
                 .build();
     }
 
-    @Transactional
-    List<MajorCombo> majorComboBuilder(long majorId, List<String> comboNames) {
-        List<MajorCombo> majorCombos = comboNames.stream()
-                .map(comboName -> MajorCombo.builder()
-                        .majorComboId(MajorComboId.builder()
-                                .majorId(majorId)
-                                .codeCombination(comboName)
-                                .build())
-                        .major(majorRepository.getReferenceById(majorId))
-                        .subjectCombination(subjectCombinationRepository.getReferenceById(comboName))
-                        .build())
+    public List<MajorResponse> getMajorByUni(Long universityId) {
+        List<UniversityMajor> universityMajors = universityMajorRepository.findByUniversityUniversityId(universityId)
+                .orElseThrow(() -> new RuntimeException("University not found"));
+
+        return universityMajors.stream()
+                .map(um -> getMajor(um.getMajor().getMajorId()))
                 .toList();
-        return majorComboRepository.saveAll(majorCombos);
     }
 
     @Transactional
@@ -212,6 +217,23 @@ public class MajorService {
             throw new RuntimeException("Failed to parse CSV", e);
         }
         return responses;
+    }
+
+    @Transactional
+    List<MajorCombo> majorComboBuilder(UniversityMajor universityMajor, List<String> comboNames) {
+        List<MajorCombo> majorCombos = comboNames.stream()
+                .map(comboName -> MajorCombo.builder()
+                        .majorComboId(MajorComboId.builder()
+                                .majorId(universityMajor.getMajor().getMajorId())
+                                .universityId(universityMajor.getUniversity().getUniversityId())
+                                .codeCombination(comboName)
+                                .build())
+                        .major(universityMajor.getMajor())
+                        .university(universityMajor.getUniversity())
+                        .subjectCombination(subjectCombinationRepository.getReferenceById(comboName))
+                        .build())
+                .toList();
+        return majorComboRepository.saveAll(majorCombos);
     }
 
     UniversityMajorResponse getUniversityMajor(UniversityMajorId id) {

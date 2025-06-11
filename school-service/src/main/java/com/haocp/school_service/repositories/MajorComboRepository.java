@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface MajorComboRepository extends JpaRepository<MajorCombo, MajorComboId> {
 
     Optional<List<MajorCombo>> findMajorComboByMajorMajorId(Long id);
+    Optional<List<MajorCombo>> findMajorComboBySubjectCombinationCodeCombination(String codeCombination);
 
 }

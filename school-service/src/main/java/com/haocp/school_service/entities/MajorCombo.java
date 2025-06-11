@@ -23,6 +23,10 @@ public class MajorCombo {
     Major major;
 
     @ManyToOne
+    @MapsId("universityId")
+    University university;
+
+    @ManyToOne
     @MapsId("codeCombination")
     SubjectCombination subjectCombination;
 

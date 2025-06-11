@@ -1,6 +1,9 @@
 package com.haocp.school_service.entities;
 
+import com.haocp.school_service.entities.enums.ScoreType;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,5 +20,8 @@ public class StandardScoreId implements Serializable {
     long universityId;
     long majorId;
     int year;
+
+    @Enumerated(EnumType.STRING)
+    ScoreType scoreType;
 
 }

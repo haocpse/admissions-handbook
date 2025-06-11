@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 public class MajorComboResponse {
 
+    String universityName;
     String majorName;
     List<String> codeCombination;
 

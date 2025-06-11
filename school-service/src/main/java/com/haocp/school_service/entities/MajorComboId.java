@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Builder
 public class MajorComboId implements Serializable {
 
+    Long universityId;
     Long majorId;
     String codeCombination;
 

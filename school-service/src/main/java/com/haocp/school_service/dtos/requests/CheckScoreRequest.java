@@ -1,19 +1,17 @@
 package com.haocp.school_service.dtos.requests;
 
+import com.haocp.school_service.entities.enums.ScoreType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class AddMajorComboRequest {
+public class CheckScoreRequest {
 
-    Long universityId;
-    Long majorId;
-    List<String> codeCombinations;
+    double score;
+    ScoreType scoreType;
 
 }

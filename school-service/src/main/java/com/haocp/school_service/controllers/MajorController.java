@@ -74,4 +74,11 @@ public class MajorController {
                 .build();
     }
 
+    @GetMapping("/major/by-uni")
+    public ApiResponse<List<MajorResponse>> majors(@RequestParam Long universityId){
+        return ApiResponse.<List<MajorResponse>>builder()
+                .data(majorService.getMajorByUni(universityId))
+                .build();
+    }
+
 }

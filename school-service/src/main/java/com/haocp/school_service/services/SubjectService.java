@@ -47,6 +47,56 @@ public class SubjectService {
                 .build();
     }
 
+    public List<SubjectResponse> subjects() {
+        return subjectRepository.findAll().stream().map(
+                subject ->
+                        SubjectResponse.builder()
+                                .subjectName(subject.getSubjectName())
+                                .build()
+        ).toList();
+    }
+
+    public List<SubjectCombinationResponse> comboSubjects() {
+        return subjectCombinationRepository.findAll().stream().map(
+                combo ->
+                        SubjectCombinationResponse.builder()
+                                .codeCombination(combo.getCodeCombination())
+                                .subjectName(null)
+                                .build()
+        ).toList();
+    }
+
+    public SubjectCombinationResponse getComboSubject(String codeCombination) {
+        List<ComboSubject> comboSubjects = comboSubjectRepository.findBySubjectCombinationCodeCombination(codeCombination)
+                .orElseThrow(() -> new RuntimeException("Error at getComboSubject"));
+        return SubjectCombinationResponse.builder()
+                .codeCombination(codeCombination)
+                .subjectName(comboSubjects.stream()
+                        .map(
+                                comboSubject -> comboSubject.getSubject().getSubjectName()
+                        )
+                        .toList())
+                .build();
+    }
+
+    @Transactional
+    public SubjectCombinationResponse addSubjectCombination(AddSubjectCombinationRequest request) {
+        SubjectCombination subjectCombination = subjectCombinationRepository.save(
+                SubjectCombination.builder()
+                        .codeCombination(request.getCodeCombination())
+                        .build()
+        );
+
+        List<ComboSubject> comboSubjects = majorComboBuilder(subjectCombination.getCodeCombination(), request.getSubjectIds());
+
+        return SubjectCombinationResponse.builder()
+                .codeCombination(subjectCombination.getCodeCombination())
+                .subjectName(comboSubjects.stream()
+                        .map(cs -> cs.getSubject().getSubjectName())
+                        .toList())
+                .build();
+    }
+
     @Transactional
     public List<SubjectResponse> importSubjectByCSV(MultipartFile file){
         List<SubjectResponse> responses = new ArrayList<>();
@@ -67,24 +117,6 @@ public class SubjectService {
             throw new RuntimeException("Failed to parse CSV", e);
         }
         return responses;
-    }
-
-    @Transactional
-    public SubjectCombinationResponse addSubjectCombination(AddSubjectCombinationRequest request) {
-        SubjectCombination subjectCombination = subjectCombinationRepository.save(
-                SubjectCombination.builder()
-                        .codeCombination(request.getCodeCombination())
-                        .build()
-        );
-
-        List<ComboSubject> comboSubjects = majorComboBuilder(subjectCombination.getCodeCombination(), request.getSubjectIds());
-
-        return SubjectCombinationResponse.builder()
-                .codeCombination(subjectCombination.getCodeCombination())
-                .subjectName(comboSubjects.stream()
-                        .map(cs -> cs.getSubject().getSubjectName())
-                        .toList())
-                .build();
     }
 
 //    @Transactional
@@ -127,38 +159,6 @@ public class SubjectService {
                         .build())
                 .toList();
         return comboSubjectRepository.saveAll(comboSubjects);
-    }
-
-    public List<SubjectResponse> subjects() {
-        return subjectRepository.findAll().stream().map(
-                subject ->
-                     SubjectResponse.builder()
-                            .subjectName(subject.getSubjectName())
-                            .build()
-        ).toList();
-    }
-
-    public List<SubjectCombinationResponse> comboSubjects() {
-        return subjectCombinationRepository.findAll().stream().map(
-                combo ->
-                        SubjectCombinationResponse.builder()
-                                .codeCombination(combo.getCodeCombination())
-                                .subjectName(null)
-                                .build()
-        ).toList();
-    }
-
-    public SubjectCombinationResponse getComboSubject(String codeCombination) {
-        List<ComboSubject> comboSubjects = comboSubjectRepository.findBySubjectCombinationCodeCombination(codeCombination)
-                .orElseThrow(() -> new RuntimeException("Error at getComboSubject"));
-        return SubjectCombinationResponse.builder()
-                .codeCombination(codeCombination)
-                .subjectName(comboSubjects.stream()
-                        .map(
-                                comboSubject -> comboSubject.getSubject().getSubjectName()
-                        )
-                        .toList())
-                .build();
     }
 
 }

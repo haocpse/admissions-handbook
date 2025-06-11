@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface UniversityMajorRepository extends JpaRepository<UniversityMajor, UniversityMajorId> {
 
     Optional<List<UniversityMajor>> findByUniversityUniversityId(Long universityId);
+    List<UniversityMajor> findDistinctByMajorMajorIdIn(List<Long> majorIds);
 
 }

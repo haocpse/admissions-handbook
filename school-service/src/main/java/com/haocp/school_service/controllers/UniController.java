@@ -2,6 +2,7 @@ package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
+import com.haocp.school_service.dtos.requests.CheckScoreRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
 import com.haocp.school_service.services.UniService;
@@ -53,6 +54,20 @@ public class UniController {
     public ApiResponse<UniversityResponse> updateMajorsOfUni(@RequestBody UpdateMajorsOfUniRequest request, @PathVariable Long universityId){
         return ApiResponse.<UniversityResponse>builder()
                 .data(uniService.updateMajorsOfUni(request, universityId))
+                .build();
+    }
+
+    @GetMapping("/uni/by-combo")
+    public ApiResponse<List<UniversityResponse>> getUniversitiesByCombo(@RequestParam String comboCode){
+        return ApiResponse.<List<UniversityResponse>>builder()
+                .data(uniService.getUniversitiesByCombo(comboCode))
+                .build();
+    }
+
+    @GetMapping("/uni/by-score")
+    public ApiResponse<List<UniversityResponse>> getUniversitiesByScore(@RequestBody CheckScoreRequest request){
+        return ApiResponse.<List<UniversityResponse>>builder()
+                .data(uniService.getUniversitiesByScore(request))
                 .build();
     }
 
