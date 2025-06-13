@@ -186,13 +186,11 @@ public class UniService {
             University university = mc.getUniversity();
             Major major = mc.getMajor();
 
-            responseMap.computeIfAbsent(university.getUniversityId(), id -> UniversityResponse.builder()
-                    .universityName(university.getUniversityName())
-                    .main(university.getMain())
-                    .code(university.getCode())
-                    .alias(university.getAlias())
-                    .universityMajors(new ArrayList<>())
-                    .build());
+            responseMap.computeIfAbsent(university.getUniversityId(), id -> {
+                UniversityResponse response = uniMapper.toUniversityResponse(university);
+                response.setUniversityMajors(new ArrayList<>());
+                return response;
+            });
 
             responseMap.get(university.getUniversityId()).getUniversityMajors()
                     .add(majorService.getMajor(major.getMajorId()));
