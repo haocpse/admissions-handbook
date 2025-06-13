@@ -18,25 +18,34 @@ public class Major {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long majorId;
+    Long majorId;
 
     @Column(nullable = false, unique = true)
     String majorName;
 
     @OneToMany(mappedBy = "major")
+    List<MajorCombo> majorCombos;
+
+    @OneToMany(mappedBy = "major")
     List<UniversityMajor> universityMajors;
 
     @Column(nullable = false)
+    @Builder.Default
     boolean active = true;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date createdAt = new Date();
+    Date createdAt;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date updatedAt = new Date();
+    Date updatedAt;
 
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
     @PreUpdate
     public void preUpdate() {
         updatedAt = new Date();

@@ -19,22 +19,29 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long subjectId;
+
     @Column(nullable = false, unique = true)
     String subjectName;
 
-    @ManyToMany
-    List<SubjectCombination> subjectCombinations;
+    @OneToMany(mappedBy = "subject")
+    List<ComboSubject> comboSubjects;
 
     @Column(nullable = false)
     boolean active = true;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date createdAt = new Date();
+    Date createdAt;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date updatedAt = new Date();
+    Date updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
 
     @PreUpdate
     public void preUpdate() {

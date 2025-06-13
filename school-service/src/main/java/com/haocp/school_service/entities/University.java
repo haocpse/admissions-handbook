@@ -1,12 +1,12 @@
 package com.haocp.school_service.entities;
 
+import com.haocp.school_service.entities.enums.UniMain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +24,16 @@ public class University {
     @Column(nullable = false, unique = true)
     String universityName;
 
+    @Column(nullable = false)
+    String code;
+
+    @Column(nullable = false)
+    String alias;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    UniMain main;
+
     @OneToMany(mappedBy = "university")
     List<UniversityMajor> universityMajors;
 
@@ -32,11 +42,17 @@ public class University {
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date createdAt = new Date();
+    Date createdAt;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date updatedAt = new Date();
+    Date updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
 
     @PreUpdate
     public void preUpdate() {

@@ -12,11 +12,11 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "university_majors")
-public class UniversityMajor {
+@Table(name = "standard_scores")
+public class StandardScore {
 
     @EmbeddedId
-    UniversityMajorId id;
+    StandardScoreId standardScoreId;
 
     @ManyToOne
     @MapsId("universityId")
@@ -26,14 +26,11 @@ public class UniversityMajor {
     @MapsId("majorId")
     Major major;
 
-    @Column
-    String codeMajor;
-
-    @Column
-    Long tuition;
-
     @Column(nullable = false)
-    boolean active = true;
+    double score;
+
+    @Column
+    String note;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

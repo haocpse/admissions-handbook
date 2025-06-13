@@ -12,25 +12,23 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "university_majors")
-public class UniversityMajor {
+@Table(name = "major_combos")
+public class MajorCombo {
 
     @EmbeddedId
-    UniversityMajorId id;
+    MajorComboId majorComboId;
+
+    @ManyToOne
+    @MapsId("majorId")
+    Major major;
 
     @ManyToOne
     @MapsId("universityId")
     University university;
 
     @ManyToOne
-    @MapsId("majorId")
-    Major major;
-
-    @Column
-    String codeMajor;
-
-    @Column
-    Long tuition;
+    @MapsId("codeCombination")
+    SubjectCombination subjectCombination;
 
     @Column(nullable = false)
     boolean active = true;
@@ -53,5 +51,4 @@ public class UniversityMajor {
     public void preUpdate() {
         updatedAt = new Date();
     }
-
 }
