@@ -31,6 +31,17 @@
         <module name="school-service" />
         <module name="auth-service" />
       </profile>
+      <profile name="Annotation profile for chat-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="chat-service" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="noti-service (2) (com.dungud)" target="21" />
@@ -40,6 +51,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
+      <module name="chat-service" options="-parameters" />
       <module name="eureka-discovery" options="-parameters" />
       <module name="new-service" options="-parameters" />
       <module name="school-service" options="-parameters" />

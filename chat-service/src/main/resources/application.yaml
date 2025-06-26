@@ -21,9 +21,7 @@ server:
 
 gemini:
   api:
-    url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAfFbRudTKGG4jqb4dyfGx0ZII7pCiPnJI"
-
-
+    url: ${GEMINI_API_URL}
 
 
 eureka:
