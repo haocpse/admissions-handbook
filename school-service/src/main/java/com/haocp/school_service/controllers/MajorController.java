@@ -18,21 +18,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/school")
+@RequestMapping("/api/uni")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MajorController {
 
     @Autowired
     MajorService majorService;
 
-    @GetMapping("/major")
+    @GetMapping("/v1/major")
     public ApiResponse<List<MajorResponse>> majors(){
         return ApiResponse.<List<MajorResponse>>builder()
                 .data(majorService.majors())
                 .build();
     }
 
-    @GetMapping("/major/{majorId}")
+    @GetMapping("/v1/major/{majorId}")
     public ApiResponse<MajorResponse> getMajor(@PathVariable Long majorId){
         return ApiResponse.<MajorResponse>builder()
                 .data(majorService.getMajor(majorId))
@@ -53,14 +53,14 @@ public class MajorController {
                 .build();
     }
 
-    @PostMapping("/major/combo")
+    @PostMapping("/v1/major/combo")
     public ApiResponse<MajorComboResponse> addMajorCombo(@RequestBody AddMajorComboRequest addMajorRequest) {
         return ApiResponse.<MajorComboResponse>builder()
                 .data(majorService.addMajorCombo(addMajorRequest))
                 .build();
     }
 
-    @PostMapping("/score")
+    @PostMapping("/v1/score")
     public ApiResponse<StandardScoreResponse> addMajorScore(@RequestBody AddStandardScoreRequest request) {
         return ApiResponse.<StandardScoreResponse>builder()
                 .data(majorService.addStandardScore(request))
@@ -74,7 +74,7 @@ public class MajorController {
                 .build();
     }
 
-    @GetMapping("/major/by-uni")
+    @GetMapping("/v1/major/by-uni")
     public ApiResponse<List<MajorResponse>> majors(@RequestParam Long universityId){
         return ApiResponse.<List<MajorResponse>>builder()
                 .data(majorService.getMajorByUni(universityId))

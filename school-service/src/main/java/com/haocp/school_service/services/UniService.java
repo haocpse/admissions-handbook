@@ -43,6 +43,8 @@ public class UniService {
     MajorComboRepository majorComboRepository;
     @Autowired
     StandardScoreRepository standardScoreRepository;
+    @Autowired
+    FavoriteUniversityRepository favoriteUniversityRepository;
 
     public UniversityResponse getUniversity(Long universityId) {
         University university = uniRepository.findById(universityId)
@@ -196,5 +198,26 @@ public class UniService {
                     .add(majorService.getMajor(major.getMajorId()));
         }
         return new ArrayList<>(responseMap.values());
+    }
+
+    public List<UniversityResponse> getFavorites(String username) {
+        List<FavoriteUniversity> favorites = favoriteUniversityRepository.findByUsername(username);
+        List<UniversityResponse> responses = new ArrayList<>();
+        for (FavoriteUniversity favorite : favorites) {
+            University university = favorite.getUniversity();
+            UniversityResponse response = uniMapper.toUniversityResponse(university);
+            response.setUniversityMajors(new ArrayList<>());
+            responses.add(response);
+        }
+        return responses;
+    }
+
+    public UniversityResponse addFavorites(long universityId, String username) {
+        University university = uniRepository.getReferenceById(universityId);
+        favoriteUniversityRepository.save(FavoriteUniversity.builder()
+                        .username(username)
+                        .university(university)
+                .build());
+        return uniMapper.toUniversityResponse(university);
     }
 }

@@ -12,7 +12,9 @@ public enum ErrorCode {
 
     NOT_FOUND_USER(404, "Not found user", HttpStatus.NOT_FOUND),
     WRONG_PASSWORD(400, "Wrong password", HttpStatus.BAD_REQUEST),
-    INVALID_TOKEN(401, "Invalid or expired token", HttpStatus.UNAUTHORIZED);
+    INVALID_TOKEN(401, "Invalid or expired token", HttpStatus.UNAUTHORIZED),
+    UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    BAD_REQUEST(500, "BAD_REQUEST", HttpStatus.BAD_REQUEST);;
 
     int code;
     String message;

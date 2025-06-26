@@ -4,6 +4,7 @@ import com.haocp.auth_service.dtos.ApiResponse;
 import com.haocp.auth_service.dtos.requests.CreateUserRequest;
 import com.haocp.auth_service.dtos.requests.VerifyTokenRequest;
 import com.haocp.auth_service.dtos.requests.LoginRequest;
+import com.haocp.auth_service.dtos.responses.IntrospectResponse;
 import com.haocp.auth_service.dtos.responses.LoginResponse;
 import com.haocp.auth_service.dtos.responses.UserResponse;
 import com.haocp.auth_service.services.AuthService;
@@ -45,8 +46,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/introspect")
-    public ApiResponse<Boolean> introspect(@RequestBody VerifyTokenRequest request){
-        return ApiResponse.<Boolean>builder()
+    public ApiResponse<IntrospectResponse> introspect(@RequestBody VerifyTokenRequest request){
+        return ApiResponse.<IntrospectResponse>builder()
                 .data(authService.introspect(request))
                 .build();
     }

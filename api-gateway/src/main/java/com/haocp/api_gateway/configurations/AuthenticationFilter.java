@@ -3,6 +3,7 @@ package com.haocp.api_gateway.configurations;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haocp.api_gateway.dtos.ApiResponse;
+import com.haocp.api_gateway.dtos.requests.IntrospectResponse;
 import com.haocp.api_gateway.repositories.AuthClient;
 import com.haocp.api_gateway.services.AuthService;
 import lombok.AccessLevel;
@@ -32,8 +33,14 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     AuthService authService;
     @Autowired
     ObjectMapper objectMapper;
-    @NonFinal
-    String[] publicEndpoints = {"/api/auth/.*"};
+
+    record PublicRoute(String method, String pattern) {}
+
+    List<PublicRoute> publicRoutes = List.of(
+            new PublicRoute("POST", "/api/auth/.*"),
+            new PublicRoute("GET", "^/api/uni/v1(/.*)?$"),
+            new PublicRoute("GET", "/api/user/.*")
+    );
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -47,15 +54,30 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         String token = authHeaders.getFirst().replace("Bearer ", "");
         return authService.introspect(token).flatMap(booleanApiResponse -> {
-            if (booleanApiResponse.getData())
-                return chain.filter(exchange);
+            IntrospectResponse data = booleanApiResponse.getData();
+            if (data != null && Boolean.TRUE.equals(data.getValid())) {
+                ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
+                        .header("X-User-Name", data.getUsername())
+                        .build();
+
+                ServerWebExchange mutatedExchange = exchange.mutate()
+                        .request(mutatedRequest)
+                        .build();
+
+                return chain.filter(mutatedExchange);
+            }
             else
                 return unauthenticated(exchange.getResponse());
         });
     }
 
     private boolean isPublicEndPoint(ServerHttpRequest request) {
-        return Arrays.stream(publicEndpoints).anyMatch(endpoint -> request.getURI().getPath().matches(endpoint));
+        String path = request.getURI().getPath();
+        request.getMethod();
+        String method = request.getMethod().name();
+        return publicRoutes.stream()
+                .anyMatch(route -> method.equalsIgnoreCase(route.method())
+                        && path.matches(route.pattern()));
     }
 
     @Override

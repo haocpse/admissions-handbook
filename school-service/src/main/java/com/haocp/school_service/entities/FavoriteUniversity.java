@@ -1,12 +1,10 @@
 package com.haocp.school_service.entities;
 
-import com.haocp.school_service.entities.enums.UniMain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,34 +12,19 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "universities")
-public class University {
+@Table(name = "favorites")
+public class FavoriteUniversity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long universityId;
+    long favoriteUniversityId;
+
+    @ManyToOne
+    @JoinColumn(name = "university_id", nullable = false)
+    University university;
 
     @Column(nullable = false, unique = true)
-    String universityName;
-
-    @Column(nullable = false)
-    String code;
-
-    @Column(nullable = false)
-    String alias;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    UniMain main;
-
-    @OneToMany(mappedBy = "university")
-    List<UniversityMajor> universityMajors;
-
-    @OneToMany(mappedBy = "university")
-    List<FavoriteUniversity> favorites;
-
-    @Column(nullable = false)
-    boolean active = true;
+    String username;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

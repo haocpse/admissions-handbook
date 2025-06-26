@@ -17,28 +17,28 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/school")
+@RequestMapping("/api/uni")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubjectController {
 
    @Autowired
    SubjectService subjectService;
 
-    @GetMapping("/subject")
+    @GetMapping("/v1/subject")
     public ApiResponse<List<SubjectResponse>> subjects(){
         return ApiResponse.<List<SubjectResponse>>builder()
                 .data(subjectService.subjects())
                 .build();
     }
 
-    @GetMapping("/subject-combo")
+    @GetMapping("/v1/subject-combo")
     public ApiResponse<List<SubjectCombinationResponse>> comboSubjects(){
         return ApiResponse.<List<SubjectCombinationResponse>>builder()
                 .data(subjectService.comboSubjects())
                 .build();
     }
 
-    @GetMapping("/subject-combo/{codeCombination}")
+    @GetMapping("/v1/subject-combo/{codeCombination}")
     public ApiResponse<SubjectCombinationResponse> getSubject(@PathVariable String codeCombination){
         return ApiResponse.<SubjectCombinationResponse>builder()
                 .data(subjectService.getComboSubject(codeCombination))
