@@ -10,15 +10,6 @@
         <module name="api-gateway" />
         <module name="eureka-discovery" />
       </profile>
-      <profile name="Annotation profile for new-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-        </processorPath>
-        <module name="new-service" />
-      </profile>
       <profile name="Annotation profile for school-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -42,6 +33,16 @@
         </processorPath>
         <module name="chat-service" />
       </profile>
+      <profile name="Annotation profile for noti-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="noti-service" />
+        <module name="new-service" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="noti-service (2) (com.dungud)" target="21" />
@@ -54,6 +55,7 @@
       <module name="chat-service" options="-parameters" />
       <module name="eureka-discovery" options="-parameters" />
       <module name="new-service" options="-parameters" />
+      <module name="noti-service" options="-parameters" />
       <module name="school-service" options="-parameters" />
     </option>
   </component>

@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: noti-service
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/360b_noti_database
+#    username: root
+#    password: 12345
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    url: jdbc:mysql://localhost:3306/360b_noti_database
+#    user: root
+#    password: 12345
+#    locations: classpath:db/migration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+server:
+  port: 9001
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+
+jwt:
+  valid-duration: 300
+  refreshable-duration: 172800
+  signer-key: BWHX28bDtNd9+mWCCZ7gi52UmXIkJJzi5qqdkNZUEghdrQ7Hoal4U1B2CqFc+3uA
