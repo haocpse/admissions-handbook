@@ -4,6 +4,8 @@ import com.dungud.new_service.dtos.responses.CategoryListResponse;
 import com.dungud.new_service.dtos.responses.CategoryDetailResponse;
 import com.dungud.new_service.entities.Category;
 import com.dungud.new_service.repositories.CategoryRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;

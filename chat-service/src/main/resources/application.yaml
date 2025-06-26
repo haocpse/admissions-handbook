@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: chat-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/360b_chat_database
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:3306/360b_new_database
+    user: root
+    password: 12345
+    locations: classpath:db/migration
+#  ai:
+#    google:
+#      gemini:
+#        api-key: AIzaSyAfFbRudTKGG4jqb4dyfGx0ZII7pCiPnJI
+#        chat:
+#          options:
+#            # Bạn có thể chọn model ở đây, ví dụ: gemini-1.5-flash-latest hoặc gemini-pro
+#            model: gemini-1.5-flash-latest
+
+server:
+  port: 9002
+
+#openai:
+#  api-key: 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
+#
+gemini:
+  api:
+    url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAfFbRudTKGG4jqb4dyfGx0ZII7pCiPnJI"
+
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+
+jwt:
+  valid-duration: 300
+  refreshable-duration: 172800
+  signer-key: BWHX28bDtNd9+mWCCZ7gi52UmXIkJJzi5qqdkNZUEghdrQ7Hoal4U1B2CqFc+3uA

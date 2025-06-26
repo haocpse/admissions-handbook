@@ -9,6 +9,8 @@ import com.dungud.new_service.entities.News;
 import com.dungud.new_service.repositories.CategoryRepository;
 import com.dungud.new_service.repositories.CommentRepository;
 import com.dungud.new_service.repositories.NewRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewService {
     @Autowired
     private NewRepository newRepository;

@@ -8,6 +8,8 @@ import com.dungud.new_service.entities.Comment;
 import com.dungud.new_service.entities.News;
 import com.dungud.new_service.repositories.CommentRepository;
 import com.dungud.new_service.repositories.NewRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
