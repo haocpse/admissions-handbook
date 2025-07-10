@@ -1,6 +1,7 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
+import com.haocp.school_service.dtos.requests.AddMajorComboInUniversityRequest;
 import com.haocp.school_service.dtos.requests.AddMajorComboRequest;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
@@ -78,6 +79,13 @@ public class MajorController {
     public ApiResponse<List<MajorResponse>> majors(@RequestParam Long universityId){
         return ApiResponse.<List<MajorResponse>>builder()
                 .data(majorService.getMajorByUni(universityId))
+                .build();
+    }
+
+    @PostMapping("/v1/major/by-uni")
+    public ApiResponse<MajorComboResponse> addMajorsInUniversity(@RequestParam Long universityId, @RequestBody AddMajorComboInUniversityRequest request){
+        return ApiResponse.<MajorComboResponse>builder()
+                .data(majorService.addMajorsInUniversity(universityId, request))
                 .build();
     }
 

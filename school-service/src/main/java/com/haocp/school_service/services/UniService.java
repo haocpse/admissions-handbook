@@ -84,7 +84,7 @@ public class UniService {
     }
 
     public List<UniversityResponse> universities() {
-        List<University> universities = uniRepository.findAll();
+        List<University> universities = uniRepository.findAllByActiveIsTrue();
         return universities.stream()
                 .map(university -> {
                     UniversityResponse response = uniMapper.toUniversityResponse(university);

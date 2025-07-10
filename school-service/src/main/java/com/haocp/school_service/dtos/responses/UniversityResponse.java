@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 public class UniversityResponse {
 
+    long universityId;
     String universityName;
     String code;
     String alias;

@@ -1,5 +1,6 @@
 package com.haocp.school_service.services;
 
+import com.haocp.school_service.dtos.requests.AddMajorComboInUniversityRequest;
 import com.haocp.school_service.dtos.requests.AddMajorComboRequest;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
@@ -47,6 +48,12 @@ public class MajorService {
         return majorMapper
                 .toMajorResponse(majorRepository
                         .save(majorMapper.toMajor(request)));
+    }
+
+    Major addMajor(String majorName){
+        return majorRepository.save(Major.builder()
+                        .majorName(majorName)
+                .build());
     }
 
     public List<MajorResponse> majors() {
@@ -102,18 +109,23 @@ public class MajorService {
 
     @Transactional
     public MajorComboResponse addMajorCombo(AddMajorComboRequest request) {
+        return buildMajorComboResponse(request.getUniversityId(), request.getMajorId(), request.getCodeCombinations());
+    }
+
+    @Transactional
+    MajorComboResponse buildMajorComboResponse(long uniId, long majorId, List<String> codeCombinations){
         UniversityMajor universityMajor = universityMajorRepository.findById(UniversityMajorId.builder()
-                        .universityId(request.getUniversityId())
-                        .majorId(request.getMajorId()).build())
+                        .universityId(uniId)
+                        .majorId(majorId).build())
                 .orElse(universityMajorRepository.save(UniversityMajor.builder()
                         .id(UniversityMajorId.builder()
-                                .universityId(request.getUniversityId())
-                                .majorId(request.getMajorId())
+                                .universityId(uniId)
+                                .majorId(majorId)
                                 .build())
-                        .major(majorRepository.getReferenceById(request.getMajorId()))
-                        .university(uniRepository.getReferenceById(request.getUniversityId()))
-                .build()));
-        List<MajorCombo> majorCombos = majorComboBuilder(universityMajor, request.getCodeCombinations());
+                        .major(majorRepository.getReferenceById(majorId))
+                        .university(uniRepository.getReferenceById(uniId))
+                        .build()));
+        List<MajorCombo> majorCombos = majorComboBuilder(universityMajor, codeCombinations);
         return MajorComboResponse.builder()
                 .universityName(universityMajor.getUniversity().getUniversityName())
                 .majorName(universityMajor.getMajor().getMajorName())
@@ -245,4 +257,12 @@ public class MajorService {
                 .build();
     }
 
+    @Transactional
+    public MajorComboResponse addMajorsInUniversity(Long universityId, AddMajorComboInUniversityRequest request) {
+        Major major = majorRepository.findByMajorName(request.getMajorName());
+        if (major == null) {
+            major = addMajor(request.getMajorName());
+        }
+        return buildMajorComboResponse(universityId, major.getMajorId(), request.getCodeCombinations());
+    }
 }
