@@ -14,7 +14,7 @@ public class NotiServiceApplication {
 
 	public static void main(String[] args) {
 		Dotenv dotenv = Dotenv.configure()
-				.directory("noti-service")  // hoặc có thể dùng đường dẫn tuyệt đối nếu cần
+				.directory("noti-service")
 				.filename(".env")
 				.load();
 

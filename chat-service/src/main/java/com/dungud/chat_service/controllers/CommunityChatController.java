@@ -5,12 +5,10 @@ import com.dungud.chat_service.dtos.request.ChatReplyRequest;
 import com.dungud.chat_service.dtos.request.ChatUpdateRequest;
 import com.dungud.chat_service.dtos.response.ApiResponse;
 import com.dungud.chat_service.dtos.response.ChatListDetailResponse;
-import com.dungud.chat_service.entities.CommunityChat;
 import com.dungud.chat_service.services.CommunityChatService;
+import com.dungud.chat_service.services.CommunityChatServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/communityChats")

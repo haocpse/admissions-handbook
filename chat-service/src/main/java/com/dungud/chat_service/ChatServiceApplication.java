@@ -12,8 +12,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class ChatServiceApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+		Dotenv dotenv = Dotenv.configure()
+				.directory("chat-service")  // hoặc có thể dùng đường dẫn tuyệt đối nếu cần
+				.filename(".env")
+				.load();
+
+		dotenv.entries().forEach(entry ->
+				System.setProperty(entry.getKey(), entry.getValue())
+		);
 		SpringApplication.run(ChatServiceApplication.class, args);
 	}
 }
