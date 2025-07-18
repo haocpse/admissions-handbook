@@ -6,8 +6,6 @@ import com.dungud.new_service.dtos.requests.UpdateCommentRequest;
 import com.dungud.new_service.dtos.responses.ApiResponse;
 import com.dungud.new_service.dtos.responses.CommentDetailResponse;
 import com.dungud.new_service.services.CommentService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

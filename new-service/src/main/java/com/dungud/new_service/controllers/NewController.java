@@ -5,8 +5,7 @@ import com.dungud.new_service.dtos.responses.ApiResponse;
 import com.dungud.new_service.dtos.responses.NewDetailResponse;
 import com.dungud.new_service.dtos.responses.NewListResponse;
 import com.dungud.new_service.services.NewService;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import com.dungud.new_service.services.NewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
