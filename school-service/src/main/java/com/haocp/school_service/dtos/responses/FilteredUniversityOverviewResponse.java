@@ -10,11 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class MajorResponse {
+public class FilteredUniversityOverviewResponse {
 
-    long majorId;
-    String majorName;
-    List<MajorStandardScoreOverviewResponse> scoreOverview;
-    List<SubjectCombinationResponse> combo;
+    int totalUniversity;
+    List<FilteredUniversityDetailResponse> detailResponseList;
 
 }

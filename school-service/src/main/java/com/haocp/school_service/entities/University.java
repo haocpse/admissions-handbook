@@ -28,7 +28,10 @@ public class University {
     String code;
 
     @Column(nullable = false)
-    String alias;
+    String address;
+
+    @Column(nullable = false)
+    String thumbnail;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -36,7 +36,7 @@ public class MajorController {
     @GetMapping("/v1/major/{majorId}")
     public ApiResponse<MajorResponse> getMajor(@PathVariable Long majorId){
         return ApiResponse.<MajorResponse>builder()
-                .data(majorService.getMajor(majorId))
+                .data(majorService.getMajor(majorId, null))
                 .build();
     }
 
@@ -54,7 +54,7 @@ public class MajorController {
                 .build();
     }
 
-    @PostMapping("/v1/major/combo")
+    @PostMapping("/major/combo")
     public ApiResponse<MajorComboResponse> addMajorCombo(@RequestBody AddMajorComboRequest addMajorRequest) {
         return ApiResponse.<MajorComboResponse>builder()
                 .data(majorService.addMajorCombo(addMajorRequest))

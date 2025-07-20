@@ -1,6 +1,5 @@
-package com.haocp.school_service.dtos.requests;
+package com.haocp.school_service.dtos.responses;
 
-import com.haocp.school_service.entities.UniversityMajorId;
 import com.haocp.school_service.entities.enums.ScoreType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,12 +9,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class AddStandardScoreRequest {
+public class MajorStandardScoreDetailResponse {
 
-    long universityId;
-    long majorId;
-    int year;
-    double score;
     ScoreType type;
+    double score;
 
 }

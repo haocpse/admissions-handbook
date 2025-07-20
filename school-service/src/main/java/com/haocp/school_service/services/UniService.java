@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
 import com.haocp.school_service.dtos.requests.CheckScoreRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
-import com.haocp.school_service.dtos.responses.UniversityMajorResponse;
-import com.haocp.school_service.dtos.responses.UniversityResponse;
+import com.haocp.school_service.dtos.responses.*;
 import com.haocp.school_service.entities.*;
+import com.haocp.school_service.entities.enums.ScoreType;
 import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.mapper.UniMapper;
 import com.haocp.school_service.repositories.*;
@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -55,7 +56,11 @@ public class UniService {
                 .map(um -> um.getMajor().getMajorId())
                 .toList();
         UniversityResponse response = uniMapper.toUniversityResponse(university);
-        response.setUniversityMajors(majorService.getNameMajor(majorIds));
+        List<MajorResponse> majorResponses = new ArrayList<>();
+        for (Long id : majorIds) {
+            majorResponses.add(majorService.getMajor(id, universityId));
+        }
+        response.setUniversityMajors(majorResponses);
         return response;
     }
 
@@ -103,32 +108,95 @@ public class UniService {
                 .toList();
     }
 
-    public List<UniversityResponse> getUniversitiesByCombo(String codeCombination){
+    public FilteredUniversityOverviewResponse getUniversitiesByCombo(String codeCombination){
         List<MajorCombo> majorCombos = majorComboRepository
                 .findMajorComboBySubjectCombinationCodeCombination(codeCombination)
                 .orElseThrow(() -> new RuntimeException("Major combo not found for code: " + codeCombination));
 
-        List<Long> majorIds = majorCombos.stream()
-                .map(mc -> mc.getMajor().getMajorId())
-                .toList();
+        Map<Long, FilteredUniversityDetailResponse> responseMap = new LinkedHashMap<>();
+        AtomicInteger totalUniversity = new AtomicInteger();
 
-        List<UniversityMajor> universityMajors = universityMajorRepository.findDistinctByMajorMajorIdIn(majorIds);
+        for (MajorCombo mc : majorCombos) {
+            University university = mc.getUniversity();
 
-        return buildListUniversityResponse(universityMajors);
+            responseMap.computeIfAbsent(university.getUniversityId(), id -> {
+                FilteredUniversityDetailResponse response = FilteredUniversityDetailResponse.builder()
+                        .university(uniMapper.toUniversityResponse(university))
+                        .build();
+                response.setTotal(0);
+
+                totalUniversity.addAndGet(1);
+                return response;
+            });
+            int count = responseMap.get(university.getUniversityId()).getTotal();
+            responseMap.get(university.getUniversityId()).setTotal(count + 1);
+        }
+
+        return FilteredUniversityOverviewResponse.builder()
+                .totalUniversity(totalUniversity.get())
+                .detailResponseList(new ArrayList<>(responseMap.values()))
+                .build();
     }
 
-    public List<UniversityResponse> getUniversitiesByScore(CheckScoreRequest request){
+    public FilteredUniversityOverviewResponse getUniversitiesByScore(CheckScoreRequest request){
         List<StandardScore> standardScores = standardScoreRepository
                 .findStandardScoreByScoreIsLessThanEqualAndStandardScoreIdScoreType(request.getScore(), request.getScoreType());
 
-        List<UniversityMajor> universityMajors = standardScores.stream()
-                .map(um -> UniversityMajor.builder()
-                        .university(um.getUniversity())
-                        .major(um.getMajor())
-                        .build())
-                .toList();
+        Map<Long, FilteredUniversityDetailResponse> responseMap = new LinkedHashMap<>();
+        AtomicInteger totalUniversity = new AtomicInteger();
 
-        return buildListUniversityResponse(universityMajors);
+        for (StandardScore ss : standardScores) {
+            University university = ss.getUniversity();
+
+            responseMap.computeIfAbsent(university.getUniversityId(), id -> {
+                FilteredUniversityDetailResponse response = FilteredUniversityDetailResponse.builder()
+                        .university(uniMapper.toUniversityResponse(university))
+                        .build();
+                response.setTotal(0);
+
+                totalUniversity.addAndGet(1);
+                return response;
+            });
+            int count = responseMap.get(university.getUniversityId()).getTotal();
+            responseMap.get(university.getUniversityId()).setTotal(count + 1);
+
+        }
+
+        return FilteredUniversityOverviewResponse.builder()
+                .totalUniversity(totalUniversity.get())
+                .detailResponseList(new ArrayList<>(responseMap.values()))
+                .build();
+    }
+
+    public FilteredUniversityOverviewResponse getUniversitiesByMajor(long majorId) {
+        List<UniversityMajor> universityMajors = universityMajorRepository.findByMajorMajorId(majorId);
+
+        Map<Long, FilteredUniversityDetailResponse> responseMap = new LinkedHashMap<>();
+        AtomicInteger totalUniversity = new AtomicInteger();
+
+        for (UniversityMajor um : universityMajors) {
+            University university = um.getUniversity();
+
+            responseMap.computeIfAbsent(university.getUniversityId(), id -> {
+                FilteredUniversityDetailResponse response = new FilteredUniversityDetailResponse();
+                response.setTotal(0);
+                UniversityResponse universityResponse = uniMapper.toUniversityResponse(university);
+                universityResponse.setUniversityMajors(new ArrayList<>());
+                response.setUniversity(universityResponse);
+                totalUniversity.addAndGet(1);
+                return response;
+            });
+            int count = responseMap.get(university.getUniversityId()).getTotal();
+            responseMap.get(university.getUniversityId()).getUniversity()
+                    .getUniversityMajors().add(majorService.getMajor(majorId, university.getUniversityId()));
+            responseMap.get(university.getUniversityId()).setTotal(count + 1);
+
+        }
+
+        return FilteredUniversityOverviewResponse.builder()
+                .totalUniversity(totalUniversity.get())
+                .detailResponseList(new ArrayList<>(responseMap.values()))
+                .build();
     }
 
     @Transactional
@@ -150,7 +218,7 @@ public class UniService {
                 University university = uniRepository.save(University.builder()
                         .code(code)
                         .universityName(name)
-                        .alias(alias)
+                        .address(alias)
                         .main(main)
                         .build());
                 addUniversityMajor(university.getUniversityId(), majorIds);
@@ -181,25 +249,6 @@ public class UniService {
         return response;
     }
 
-    List<UniversityResponse> buildListUniversityResponse(List<UniversityMajor> universityMajors){
-        Map<Long, UniversityResponse> responseMap = new LinkedHashMap<>();
-
-        for (UniversityMajor mc : universityMajors) {
-            University university = mc.getUniversity();
-            Major major = mc.getMajor();
-
-            responseMap.computeIfAbsent(university.getUniversityId(), id -> {
-                UniversityResponse response = uniMapper.toUniversityResponse(university);
-                response.setUniversityMajors(new ArrayList<>());
-                return response;
-            });
-
-            responseMap.get(university.getUniversityId()).getUniversityMajors()
-                    .add(majorService.getMajor(major.getMajorId()));
-        }
-        return new ArrayList<>(responseMap.values());
-    }
-
     public List<UniversityResponse> getFavorites(String username) {
         List<FavoriteUniversity> favorites = favoriteUniversityRepository.findByUsername(username);
         List<UniversityResponse> responses = new ArrayList<>();
@@ -219,5 +268,23 @@ public class UniService {
                         .university(university)
                 .build());
         return uniMapper.toUniversityResponse(university);
+    }
+
+    public FilteredUniversityOverviewResponse getUniversitiesByMain(UniMain main) {
+        List<University> universities = uniRepository.findAllByMain(main);
+        List<FilteredUniversityDetailResponse> responses = new ArrayList<>();
+        for (University university : universities){
+            List<UniversityMajor> um = universityMajorRepository.findByUniversityUniversityId(university.getUniversityId())
+                    .orElseThrow(()-> new RuntimeException("Error"));
+            FilteredUniversityDetailResponse response = FilteredUniversityDetailResponse.builder()
+                    .university(uniMapper.toUniversityResponse(university))
+                    .total(um.size())
+                    .build();
+            responses.add(response);
+        }
+        return FilteredUniversityOverviewResponse.builder()
+                .totalUniversity(universities.size())
+                .detailResponseList(responses)
+                .build();
     }
 }

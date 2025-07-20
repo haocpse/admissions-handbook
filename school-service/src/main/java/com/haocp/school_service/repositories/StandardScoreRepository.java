@@ -12,5 +12,7 @@ import java.util.List;
 public interface StandardScoreRepository extends JpaRepository<StandardScore, StandardScoreId> {
 
     List<StandardScore> findStandardScoreByScoreIsLessThanEqualAndStandardScoreIdScoreType(double score, ScoreType scoreType);
-
+    List<StandardScore> findStandardScoreByUniversityUniversityIdAndMajorMajorId(long universityId, long majorId);
+    List<StandardScore> findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdYear(long universityId, long majorId, int year);
+    StandardScore findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdScoreType(long universityId, long majorId, ScoreType type);
 }

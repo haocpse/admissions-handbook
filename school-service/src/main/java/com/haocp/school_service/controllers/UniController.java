@@ -4,7 +4,10 @@ import com.haocp.school_service.dtos.ApiResponse;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
 import com.haocp.school_service.dtos.requests.CheckScoreRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
+import com.haocp.school_service.dtos.responses.FilteredUniversityOverviewResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
+import com.haocp.school_service.entities.enums.ScoreType;
+import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.services.UniService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -58,16 +61,30 @@ public class UniController {
     }
 
     @GetMapping("/v1/by-combo")
-    public ApiResponse<List<UniversityResponse>> getUniversitiesByCombo(@RequestParam String comboCode){
-        return ApiResponse.<List<UniversityResponse>>builder()
+    public ApiResponse<FilteredUniversityOverviewResponse> getUniversitiesByCombo(@RequestParam String comboCode){
+        return ApiResponse.<FilteredUniversityOverviewResponse>builder()
                 .data(uniService.getUniversitiesByCombo(comboCode))
                 .build();
     }
 
     @GetMapping("/v1/by-score")
-    public ApiResponse<List<UniversityResponse>> getUniversitiesByScore(@RequestBody CheckScoreRequest request){
-        return ApiResponse.<List<UniversityResponse>>builder()
+    public ApiResponse<FilteredUniversityOverviewResponse> getUniversitiesByScore(@RequestBody CheckScoreRequest request){
+        return ApiResponse.<FilteredUniversityOverviewResponse>builder()
                 .data(uniService.getUniversitiesByScore(request))
+                .build();
+    }
+
+    @GetMapping("/v1/by-major")
+    public ApiResponse<FilteredUniversityOverviewResponse> getUniversitiesByMajor(@RequestParam long majorId){
+        return ApiResponse.<FilteredUniversityOverviewResponse>builder()
+                .data(uniService.getUniversitiesByMajor(majorId))
+                .build();
+    }
+
+    @GetMapping("/v1/by-main")
+    public ApiResponse<FilteredUniversityOverviewResponse> getUniversitiesByMain(@RequestParam UniMain main){
+        return ApiResponse.<FilteredUniversityOverviewResponse>builder()
+                .data(uniService.getUniversitiesByMain(main))
                 .build();
     }
 

@@ -16,7 +16,7 @@ public class AddUniversityRequest {
 
     String universityName;
     String code;
-    String alias;
+    String address;
     UniMain main;
     List<Long> majorIds;
 

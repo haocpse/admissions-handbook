@@ -51,7 +51,7 @@ public class AuthService {
     @Autowired
     UserMapper userMapper;
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     public UserResponse register(CreateUserRequest request) {
         User user = User.builder()

@@ -57,13 +57,12 @@ public class SubjectService {
     }
 
     public List<SubjectCombinationResponse> comboSubjects() {
-        return subjectCombinationRepository.findAll().stream().map(
-                combo ->
-                        SubjectCombinationResponse.builder()
-                                .codeCombination(combo.getCodeCombination())
-                                .subjectName(null)
-                                .build()
-        ).toList();
+        List<SubjectCombinationResponse> responses = new ArrayList<>();
+        List<SubjectCombination> subjectCombinations = subjectCombinationRepository.findAll();
+        for (SubjectCombination subjectCombination : subjectCombinations) {
+            responses.add(getComboSubject(subjectCombination.getCodeCombination()));
+        }
+        return responses;
     }
 
     public SubjectCombinationResponse getComboSubject(String codeCombination) {

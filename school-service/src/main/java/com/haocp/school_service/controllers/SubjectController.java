@@ -59,7 +59,7 @@ public class SubjectController {
                 .build();
     }
 
-    @PostMapping("/subject-combo")
+    @PostMapping("/v1/subject-combo")
     public ApiResponse<SubjectCombinationResponse> addSubjectCombination(@RequestBody AddSubjectCombinationRequest request) {
        return ApiResponse.<SubjectCombinationResponse>builder()
                .data(subjectService.addSubjectCombination(request))

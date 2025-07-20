@@ -3,6 +3,7 @@ package com.haocp.school_service.dtos.responses;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -10,11 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class MajorResponse {
+public class ScheduleOverviewResponse {
 
-    long majorId;
-    String majorName;
-    List<MajorStandardScoreOverviewResponse> scoreOverview;
-    List<SubjectCombinationResponse> combo;
+    LocalDateTime date;
+    List<ScheduleDetailResponse> details;
 
 }

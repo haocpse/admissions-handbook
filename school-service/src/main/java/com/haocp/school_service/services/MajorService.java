@@ -12,6 +12,7 @@ import com.haocp.school_service.repositories.*;
 import com.opencsv.CSVReader;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class MajorService {
 
     @Autowired
@@ -45,9 +44,9 @@ public class MajorService {
     MajorComboRepository majorComboRepository;
 
     public MajorResponse addMajor(AddMajorRequest request){
+        Major major = majorRepository.save(majorMapper.toMajor(request));
         return majorMapper
-                .toMajorResponse(majorRepository
-                        .save(majorMapper.toMajor(request)));
+                .toMajorResponse(major);
     }
 
     Major addMajor(String majorName){
@@ -59,13 +58,15 @@ public class MajorService {
     public List<MajorResponse> majors() {
         return majorRepository.findAll().stream().map(
                 major -> MajorResponse.builder()
+                            .majorId(major.getMajorId())
                             .majorName(major.getMajorName())
+                            .scoreOverview(null)
                             .combo(null)
                             .build()
         ).toList();
     }
 
-    public MajorResponse getMajor(Long majorId) {
+    public MajorResponse getMajor(Long majorId, Long universityId) {
         List<MajorCombo> majorCombos = majorComboRepository.findMajorComboByMajorMajorId(majorId)
                 .orElseThrow(() -> new RuntimeException("No subject combinations found for major ID: " + majorId));
 
@@ -90,8 +91,41 @@ public class MajorService {
                 })
                 .toList();
 
+        Map<Integer, MajorStandardScoreOverviewResponse> responseMap = new LinkedHashMap<>();
+        if (universityId != null) {
+            List<StandardScore> standardScores = standardScoreRepository
+                    .findStandardScoreByUniversityUniversityIdAndMajorMajorId(universityId, majorId);
+
+            // Group all scores by year in memory
+            Map<Integer, List<StandardScore>> scoresByYear = standardScores.stream()
+                    .collect(Collectors.groupingBy(score -> score.getStandardScoreId().getYear(),
+                            LinkedHashMap::new, // preserve order
+                            Collectors.toList()));
+
+
+
+            for (Map.Entry<Integer, List<StandardScore>> entry : scoresByYear.entrySet()) {
+                Integer year = entry.getKey();
+                List<StandardScore> scores = entry.getValue();
+
+                List<MajorStandardScoreDetailResponse> methods = scores.stream()
+                        .map(score -> MajorStandardScoreDetailResponse.builder()
+                                .type(score.getStandardScoreId().getScoreType())
+                                .score(score.getScore())
+                                .build())
+                        .collect(Collectors.toList());
+
+                responseMap.put(year, MajorStandardScoreOverviewResponse.builder()
+                                .year(year)
+                        .scoreDetails(methods)
+                        .build());
+            }
+        }
+
         return MajorResponse.builder()
+                .majorId(majorId)
                 .majorName(majorRepository.getReferenceById(majorId).getMajorName())
+                .scoreOverview(new ArrayList<>(responseMap.values()))
                 .combo(comboResponses)
                 .build();
     }
@@ -140,7 +174,7 @@ public class MajorService {
                 .orElseThrow(() -> new RuntimeException("University not found"));
 
         return universityMajors.stream()
-                .map(um -> getMajor(um.getMajor().getMajorId()))
+                .map(um -> getMajor(um.getMajor().getMajorId(), universityId))
                 .toList();
     }
 
@@ -180,6 +214,7 @@ public class MajorService {
                             .majorId(request.getMajorId())
                             .universityId(request.getUniversityId())
                             .year(request.getYear())
+                            .scoreType(request.getType())
                             .build())
                         .university(uniRepository.getReferenceById(request.getUniversityId()))
                         .major(majorRepository.getReferenceById(request.getMajorId()))
