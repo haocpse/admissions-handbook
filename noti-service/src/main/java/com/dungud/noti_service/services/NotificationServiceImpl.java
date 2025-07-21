@@ -16,24 +16,25 @@ public class NotificationServiceImpl implements NotificationService {
     private EmailService emailService;
 
     public void sendNotification(NotiRequest request) {
+        String link = "http://localhost:3000/danh-sach-truong/" + request.getSchoolId();
         if(request.getNotificationType() ==  NotificationType.InsertMajor) {
-            sendInsertMajorNotification(request.getEmailRequestList(), request.getSchoolName());
+            sendInsertMajorNotification(request.getEmailRequestList(), request.getSchoolName(), link);
         } else if (request.getNotificationType() == NotificationType.UpdateScore) {
-                sendUpdateScoreNotification(request.getEmailRequestList(), request.getSchoolName());
+                sendUpdateScoreNotification(request.getEmailRequestList(), request.getSchoolName(), link);
         } else {
             throw new IllegalArgumentException("Unknown notification type: " + request.getNotificationType());
         }
     }
 
-    private void sendInsertMajorNotification(List<EmailRequest> requests, String schoolName) {
+    private void sendInsertMajorNotification(List<EmailRequest> requests, String schoolName, String link) {
         for (EmailRequest req : requests) {
-            emailService.sendInsertMajorEmail(schoolName, req);
+            emailService.sendInsertMajorEmail(schoolName, req, link);
         }
     }
 
-    private void sendUpdateScoreNotification(List<EmailRequest> requests, String schoolName) {
+    private void sendUpdateScoreNotification(List<EmailRequest> requests, String schoolName, String link) {
         for (EmailRequest req : requests) {
-            emailService.sendUpdateScoreEmail(schoolName, req);
+            emailService.sendUpdateScoreEmail(schoolName, req, link);
         }
     }
 }

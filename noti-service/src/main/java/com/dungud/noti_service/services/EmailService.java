@@ -23,7 +23,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final String link = "https://www.facebook.com/DinhDung.554/";
+
 
     private DataSource getLogoDataSource() {
         try {
@@ -34,10 +34,10 @@ public class EmailService {
         }
     }
 
-    public void sendInsertMajorEmail(String schoolName, EmailRequest request) {
+    public void sendInsertMajorEmail(String schoolName, EmailRequest request, String link) {
         Context context = new Context();
         context.setVariable("schoolName", schoolName);
-        context.setVariable("link", link); // Truyền thêm đường dẫn vào template
+        context.setVariable("link", link);
 
         String html = templateEngine.process("Insert_Major", context);
 
@@ -57,7 +57,7 @@ public class EmailService {
         }
     }
 
-    public void sendUpdateScoreEmail(String schoolName, EmailRequest request) {
+    public void sendUpdateScoreEmail(String schoolName, EmailRequest request, String link) {
         Context context = new Context();
         context.setVariable("schoolName", schoolName);
         context.setVariable("year", LocalDate.now().getYear());
@@ -78,20 +78,6 @@ public class EmailService {
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException("Gửi email thất bại tới " + request.getEmail(), e);
-        }
-    }
-
-
-    private void sendHtmlEmail(String to, String subject, String htmlContent) {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
-            mailSender.send(message);
-        } catch (Exception e) {
-            throw new RuntimeException("Gửi email thất bại tới " + to, e);
         }
     }
 }
