@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
 import com.haocp.school_service.dtos.requests.CheckScoreRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
+import com.haocp.school_service.dtos.requests.UpdateUniversityRequest;
 import com.haocp.school_service.dtos.responses.*;
 import com.haocp.school_service.entities.*;
 import com.haocp.school_service.entities.enums.ScoreType;
@@ -14,18 +15,26 @@ import com.haocp.school_service.repositories.*;
 import com.opencsv.CSVReader;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class UniService {
 
     @Autowired
@@ -47,6 +56,9 @@ public class UniService {
     @Autowired
     FavoriteUniversityRepository favoriteUniversityRepository;
 
+    @Value("${app.upload.dir}")
+    String baseUploadDir;
+
     public UniversityResponse getUniversity(Long universityId) {
         University university = uniRepository.findById(universityId)
                 .orElseThrow(() -> new RuntimeException("University not found for ID: " + universityId));
@@ -61,15 +73,23 @@ public class UniService {
             majorResponses.add(majorService.getMajor(id, universityId));
         }
         response.setUniversityMajors(majorResponses);
+        response.setThumbnail("http://localhost:8080/uploads/"+university.getUniversityId()+"/thumbnail/"+university.getThumbnail());
         return response;
     }
 
     @Transactional
     public UniversityResponse addUniversity(AddUniversityRequest request) {
-        University university = uniRepository.save(uniMapper.toUniversity(request));
-        addUniversityMajor(university.getUniversityId(), request.getMajorIds());
-        UniversityResponse response = uniMapper.toUniversityResponse(university);
-        response.setUniversityMajors(majorService.getNameMajor(request.getMajorIds()));
+        log.info("Thumbnail: "+ request.getThumbnail().getOriginalFilename());
+        log.info("baseUploadDir: "+ baseUploadDir);
+        String fileName = Objects.requireNonNull(request.getThumbnail().getOriginalFilename()).replace(" ", "_");
+        University university = uniMapper.toUniversity(request);
+        university.setThumbnail(fileName);
+        university.setActive(true);
+        University savedUniversity = uniRepository.save(university);
+        saveThumbnail(request.getThumbnail(), savedUniversity.getUniversityId());
+//        addUniversityMajor(savedUniversity.getUniversityId(), request.getMajorIds());
+        UniversityResponse response = uniMapper.toUniversityResponse(savedUniversity);
+//        response.setUniversityMajors(majorService.getNameMajor(request.getMajorIds()));
         return response;
     }
 
@@ -93,7 +113,7 @@ public class UniService {
         return universities.stream()
                 .map(university -> {
                     UniversityResponse response = uniMapper.toUniversityResponse(university);
-
+                    response.setThumbnail("http://localhost:8080/uploads/"+university.getUniversityId()+"/thumbnail/"+university.getThumbnail());
                     List<UniversityMajor> universityMajors = universityMajorRepository
                             .findByUniversityUniversityId(university.getUniversityId())
                             .orElseThrow(() -> new RuntimeException("University majors not found for ID: " + university.getUniversityId()));
@@ -110,8 +130,7 @@ public class UniService {
 
     public FilteredUniversityOverviewResponse getUniversitiesByCombo(String codeCombination){
         List<MajorCombo> majorCombos = majorComboRepository
-                .findMajorComboBySubjectCombinationCodeCombination(codeCombination)
-                .orElseThrow(() -> new RuntimeException("Major combo not found for code: " + codeCombination));
+                .findMajorComboBySubjectCombinationCodeCombination(codeCombination);
 
         Map<Long, FilteredUniversityDetailResponse> responseMap = new LinkedHashMap<>();
         AtomicInteger totalUniversity = new AtomicInteger();
@@ -286,5 +305,31 @@ public class UniService {
                 .totalUniversity(universities.size())
                 .detailResponseList(responses)
                 .build();
+    }
+
+    void saveThumbnail(MultipartFile file, Long universityId) {
+        String fileName = Objects.requireNonNull(file.getOriginalFilename()).replace(" ", "_");
+        Path uploadPath = Paths.get(baseUploadDir, universityId.toString(), "thumbnail");
+        try {
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store file " + file.getOriginalFilename(), e);
+        }
+    }
+
+    public UniversityResponse updateUniversity(Long universityId, UpdateUniversityRequest request) {
+        University university = uniRepository.findById(universityId).orElseThrow(()-> new RuntimeException("Error"));
+        uniMapper.updateUniversityFromUpdateRequest(request, university);
+        MultipartFile file = request.getThumbnail();
+        if(file != null && !file.isEmpty()){
+            university.setThumbnail(Objects.requireNonNull(request.getThumbnail().getOriginalFilename()).replace(" ", "_"));
+            saveThumbnail(request.getThumbnail(), university.getUniversityId());
+        }
+        uniRepository.save(university);
+        return uniMapper.toUniversityResponse(university);
     }
 }

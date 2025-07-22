@@ -14,5 +14,5 @@ public interface StandardScoreRepository extends JpaRepository<StandardScore, St
     List<StandardScore> findStandardScoreByScoreIsLessThanEqualAndStandardScoreIdScoreType(double score, ScoreType scoreType);
     List<StandardScore> findStandardScoreByUniversityUniversityIdAndMajorMajorId(long universityId, long majorId);
     List<StandardScore> findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdYear(long universityId, long majorId, int year);
-    StandardScore findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdScoreType(long universityId, long majorId, ScoreType type);
+    StandardScore findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdScoreTypeAndStandardScoreIdYear(long universityId, long majorId, ScoreType type, int year);
 }

@@ -1,14 +1,12 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
-import com.haocp.school_service.dtos.requests.AddMajorComboInUniversityRequest;
-import com.haocp.school_service.dtos.requests.AddMajorComboRequest;
-import com.haocp.school_service.dtos.requests.AddMajorRequest;
-import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
+import com.haocp.school_service.dtos.requests.*;
 import com.haocp.school_service.dtos.responses.MajorComboResponse;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.StandardScoreResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
+import com.haocp.school_service.entities.enums.ScoreType;
 import com.haocp.school_service.services.MajorService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -40,6 +38,20 @@ public class MajorController {
                 .build();
     }
 
+    @PutMapping("/v1/major/{majorId}")
+    public ApiResponse<MajorResponse> updateMajor(@PathVariable Long majorId, @RequestBody UpdateMajorRequest request){
+        return ApiResponse.<MajorResponse>builder()
+                .data(majorService.updateMajor(majorId, request))
+                .build();
+    }
+
+    @DeleteMapping("/v1/major/{majorId}")
+    public ApiResponse<MajorResponse> deleteMajor(@PathVariable Long majorId){
+        return ApiResponse.<MajorResponse>builder()
+                .data(majorService.deleteMajor(majorId))
+                .build();
+    }
+
     @PostMapping("/major")
     public ApiResponse<MajorResponse> addMajor(@RequestBody AddMajorRequest addMajorRequest) {
         return ApiResponse.<MajorResponse>builder()
@@ -68,6 +80,20 @@ public class MajorController {
                 .build();
     }
 
+    @PutMapping("/v1/score")
+    public ApiResponse<StandardScoreResponse> updateMajorScore(@RequestBody UpdateStandardScoreRequest request) {
+        return ApiResponse.<StandardScoreResponse>builder()
+                .data(majorService.updateMajorScore(request))
+                .build();
+    }
+
+    @DeleteMapping("/v1/score")
+    public ApiResponse<Void> deleteMajorScore(@RequestParam Long universityId, @RequestParam Long majorId, @RequestParam int year, @RequestParam ScoreType type) {
+        return ApiResponse.<Void>builder()
+                .data(majorService.deleteMajorScore(universityId, majorId, year, type))
+                .build();
+    }
+
     @PostMapping("/score/import")
     public ApiResponse<List<StandardScoreResponse>> importScoreByCSV(@RequestParam("file") MultipartFile file) {
         return ApiResponse.<List<StandardScoreResponse>>builder()
@@ -86,6 +112,13 @@ public class MajorController {
     public ApiResponse<MajorComboResponse> addMajorsInUniversity(@RequestParam Long universityId, @RequestBody AddMajorComboInUniversityRequest request){
         return ApiResponse.<MajorComboResponse>builder()
                 .data(majorService.addMajorsInUniversity(universityId, request))
+                .build();
+    }
+
+    @PutMapping("/v1/{universityId}/major")
+    public ApiResponse<MajorComboResponse> updateMajorsInUniversity(@PathVariable Long universityId, @RequestBody UpdateMajorComboInUniversityRequest request){
+        return ApiResponse.<MajorComboResponse>builder()
+                .data(majorService.updateMajorsInUniversity(universityId, request))
                 .build();
     }
 

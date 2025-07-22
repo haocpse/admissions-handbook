@@ -13,7 +13,9 @@ import java.util.List;
 public class MajorResponse {
 
     long majorId;
+    String majorCode;
     String majorName;
+    int totalUni;
     List<MajorStandardScoreOverviewResponse> scoreOverview;
     List<SubjectCombinationResponse> combo;
 

@@ -3,12 +3,14 @@ package com.haocp.school_service.services;
 import com.haocp.school_service.dtos.requests.AddSubjectCombinationRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectRequest;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
+import com.haocp.school_service.dtos.requests.UpdateComboSubjectRequest;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.SubjectCombinationResponse;
 import com.haocp.school_service.dtos.responses.SubjectResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
 import com.haocp.school_service.entities.*;
 import com.haocp.school_service.repositories.ComboSubjectRepository;
+import com.haocp.school_service.repositories.MajorComboRepository;
 import com.haocp.school_service.repositories.SubjectCombinationRepository;
 import com.haocp.school_service.repositories.SubjectRepository;
 import com.opencsv.CSVReader;
@@ -35,6 +37,8 @@ public class SubjectService {
     SubjectCombinationRepository subjectCombinationRepository;
     @Autowired
     ComboSubjectRepository comboSubjectRepository;
+    @Autowired
+    MajorComboRepository majorComboRepository;
 
     @Transactional
     public SubjectResponse addSubject(AddSubjectRequest request) {
@@ -70,6 +74,7 @@ public class SubjectService {
                 .orElseThrow(() -> new RuntimeException("Error at getComboSubject"));
         return SubjectCombinationResponse.builder()
                 .codeCombination(codeCombination)
+                .totalMajor(majorComboRepository.findMajorComboBySubjectCombinationCodeCombination(codeCombination).size())
                 .subjectName(comboSubjects.stream()
                         .map(
                                 comboSubject -> comboSubject.getSubject().getSubjectName()
@@ -80,13 +85,13 @@ public class SubjectService {
 
     @Transactional
     public SubjectCombinationResponse addSubjectCombination(AddSubjectCombinationRequest request) {
-        SubjectCombination subjectCombination = subjectCombinationRepository.save(
-                SubjectCombination.builder()
-                        .codeCombination(request.getCodeCombination())
-                        .build()
-        );
+        SubjectCombination subjectCombination = SubjectCombination.builder()
+                .codeCombination(request.getCodeCombination())
+                .build();
 
-        List<ComboSubject> comboSubjects = majorComboBuilder(subjectCombination.getCodeCombination(), request.getSubjectIds());
+        subjectCombinationRepository.save(subjectCombination);
+
+        List<ComboSubject> comboSubjects = majorComboBuilder(subjectCombination.getCodeCombination(), request.getSubjectNames());
 
         return SubjectCombinationResponse.builder()
                 .codeCombination(subjectCombination.getCodeCombination())
@@ -146,18 +151,60 @@ public class SubjectService {
 //    }
 
     @Transactional
-    List<ComboSubject> majorComboBuilder(String comboName, List<Long> subjectIds) {
-        List<ComboSubject> comboSubjects = subjectIds.stream()
-                .map(subjectId -> ComboSubject.builder()
+    List<ComboSubject> majorComboBuilder(String comboName, List<String> subjectNames) {
+        List<ComboSubject> comboSubjects = subjectNames.stream()
+                .map(subjectName -> ComboSubject.builder()
                         .comboSubjectId(ComboSubjectId.builder()
                                 .codeCombination(comboName)
-                                .subjectId(subjectId)
+                                .subjectId(subjectRepository.findBySubjectName(subjectName).orElseThrow(() -> new RuntimeException("Error")).getSubjectId())
                                 .build())
                         .subjectCombination(subjectCombinationRepository.getReferenceById(comboName))
-                        .subject(subjectRepository.getReferenceById(subjectId))
+                        .subject(subjectRepository.findBySubjectName(subjectName).orElseThrow(() -> new RuntimeException("Error")))
                         .build())
                 .toList();
         return comboSubjectRepository.saveAll(comboSubjects);
     }
 
+    public SubjectCombinationResponse deleteComboSubject(String codeCombination) {
+
+        List<ComboSubject> comboSubjects = comboSubjectRepository.findBySubjectCombinationCodeCombination(codeCombination)
+                .orElseThrow(() -> new RuntimeException("Error at getComboSubject"));
+
+        comboSubjectRepository.deleteAll(comboSubjects);
+
+        SubjectCombination subjectCombination = subjectCombinationRepository
+                .findById(codeCombination).orElseThrow(() -> new RuntimeException("Error"));
+        subjectCombinationRepository.delete(subjectCombination);
+        return null;
+    }
+
+    @Transactional
+    public SubjectCombinationResponse updateComboSubject(String codeCombination, UpdateComboSubjectRequest request) {
+        List<Long> subjectIds = request.getSubjectNames().stream()
+                .map(cs -> subjectRepository.findBySubjectName(cs).orElseThrow(() -> new RuntimeException("Error")).getSubjectId())
+                .toList();
+
+        List<ComboSubject> comboSubjects = comboSubjectRepository
+                .findBySubjectCombinationCodeCombinationAndSubjectSubjectIdNotIn(codeCombination, subjectIds);
+
+        comboSubjectRepository.deleteAll(comboSubjects);
+
+        for (String subjectName : request.getSubjectNames()) {
+            Subject subject = subjectRepository.findBySubjectName(subjectName).orElseThrow(() -> new RuntimeException("Error"));
+            if(!comboSubjectRepository.existsById(ComboSubjectId.builder()
+                            .codeCombination(codeCombination)
+                            .subjectId(subject.getSubjectId())
+                    .build())){
+                comboSubjectRepository.save(ComboSubject.builder()
+                                .comboSubjectId(ComboSubjectId.builder()
+                                        .codeCombination(codeCombination)
+                                        .subjectId(subject.getSubjectId())
+                                        .build())
+                                .subject(subject)
+                                .subjectCombination(subjectCombinationRepository.getReferenceById(codeCombination))
+                        .build());
+            }
+        }
+        return null;
+    }
 }

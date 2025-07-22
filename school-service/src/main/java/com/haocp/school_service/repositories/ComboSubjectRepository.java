@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface ComboSubjectRepository extends JpaRepository<ComboSubject, ComboSubjectId> {
 
     Optional<List<ComboSubject>> findBySubjectCombinationCodeCombination(String codeCombination);
+    List<ComboSubject> findBySubjectCombinationCodeCombinationAndSubjectSubjectIdNotIn(String codeCombination, List<Long> subjectIds);
 
 }

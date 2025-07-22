@@ -39,7 +39,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     List<PublicRoute> publicRoutes = List.of(
             new PublicRoute("POST", "/api/auth/.*"),
             new PublicRoute("GET", "^/api/uni/v1(/.*)?$"),
-            new PublicRoute("GET", "/api/user/.*")
+            new PublicRoute("GET", "/api/user/.*"),
+            new PublicRoute("GET", "/uploads/.*")
     );
 
     @Override

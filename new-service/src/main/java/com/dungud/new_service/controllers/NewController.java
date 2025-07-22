@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/new")
+@RequestMapping("/api/news")
 //@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewController {
     @Autowired

@@ -18,7 +18,7 @@ spring:
     locations: classpath:db/migration
 
 server:
-  port: 9000
+  port: 9004
 
 eureka:
   client:

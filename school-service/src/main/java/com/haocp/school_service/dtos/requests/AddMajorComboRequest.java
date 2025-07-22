@@ -13,6 +13,7 @@ import java.util.List;
 public class AddMajorComboRequest {
 
     Long universityId;
+    String codeMajor;
     Long majorId;
     List<String> codeCombinations;
 

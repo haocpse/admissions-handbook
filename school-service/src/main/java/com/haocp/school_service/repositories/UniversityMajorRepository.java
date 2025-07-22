@@ -16,4 +16,5 @@ public interface UniversityMajorRepository extends JpaRepository<UniversityMajor
     List<UniversityMajor> findDistinctByMajorMajorIdIn(List<Long> majorIds);
     List<UniversityMajor> findByUniversityUniversityIdAndMajorMajorIdNotIn(Long universityId, List<Long> majorIds);
     void removeByUniversityUniversityIdAndMajorMajorIdIn(Long universityId, List<Long> majorIds);
+    UniversityMajor findByUniversityUniversityIdAndMajorMajorId(Long universityId, Long majorId);
 }

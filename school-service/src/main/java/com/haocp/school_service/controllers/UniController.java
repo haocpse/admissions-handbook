@@ -4,6 +4,7 @@ import com.haocp.school_service.dtos.ApiResponse;
 import com.haocp.school_service.dtos.requests.AddUniversityRequest;
 import com.haocp.school_service.dtos.requests.CheckScoreRequest;
 import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
+import com.haocp.school_service.dtos.requests.UpdateUniversityRequest;
 import com.haocp.school_service.dtos.responses.FilteredUniversityOverviewResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
 import com.haocp.school_service.entities.enums.ScoreType;
@@ -12,6 +13,7 @@ import com.haocp.school_service.services.UniService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,10 +41,19 @@ public class UniController {
                 .build();
     }
 
-    @PostMapping()
-    public ApiResponse<UniversityResponse> addUniversity(@RequestBody AddUniversityRequest request){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<UniversityResponse> addUniversity(@ModelAttribute AddUniversityRequest request){
         return ApiResponse.<UniversityResponse>builder()
                 .data(uniService.addUniversity(request))
+                .build();
+    }
+
+    @PutMapping(
+            path = "{universityId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<UniversityResponse> updateUniversity(@ModelAttribute UpdateUniversityRequest request, @PathVariable Long universityId){
+        return ApiResponse.<UniversityResponse>builder()
+                .data(uniService.updateUniversity(universityId, request))
                 .build();
     }
 

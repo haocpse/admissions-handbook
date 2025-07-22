@@ -12,6 +12,7 @@ import java.util.List;
 public class SubjectCombinationResponse {
 
     String codeCombination;
+    int totalMajor;
     List<String> subjectName;
 
 }

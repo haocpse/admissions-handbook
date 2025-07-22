@@ -4,6 +4,7 @@ import com.haocp.school_service.dtos.ApiResponse;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectCombinationRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectRequest;
+import com.haocp.school_service.dtos.requests.UpdateComboSubjectRequest;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.SubjectCombinationResponse;
 import com.haocp.school_service.dtos.responses.SubjectResponse;
@@ -42,6 +43,20 @@ public class SubjectController {
     public ApiResponse<SubjectCombinationResponse> getSubject(@PathVariable String codeCombination){
         return ApiResponse.<SubjectCombinationResponse>builder()
                 .data(subjectService.getComboSubject(codeCombination))
+                .build();
+    }
+
+    @DeleteMapping("/v1/subject-combo/{codeCombination}")
+    public ApiResponse<SubjectCombinationResponse> deleteSubject(@PathVariable String codeCombination){
+        return ApiResponse.<SubjectCombinationResponse>builder()
+                .data(subjectService.deleteComboSubject(codeCombination))
+                .build();
+    }
+
+    @PutMapping("/v1/subject-combo/{codeCombination}")
+    public ApiResponse<SubjectCombinationResponse> updateSubject(@PathVariable String codeCombination, @RequestBody UpdateComboSubjectRequest request){
+        return ApiResponse.<SubjectCombinationResponse>builder()
+                .data(subjectService.updateComboSubject(codeCombination, request))
                 .build();
     }
 

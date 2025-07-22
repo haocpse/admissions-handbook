@@ -1,11 +1,9 @@
 package com.haocp.school_service.services;
 
-import com.haocp.school_service.dtos.requests.AddMajorComboInUniversityRequest;
-import com.haocp.school_service.dtos.requests.AddMajorComboRequest;
-import com.haocp.school_service.dtos.requests.AddMajorRequest;
-import com.haocp.school_service.dtos.requests.AddStandardScoreRequest;
+import com.haocp.school_service.dtos.requests.*;
 import com.haocp.school_service.dtos.responses.*;
 import com.haocp.school_service.entities.*;
+import com.haocp.school_service.entities.enums.ScoreType;
 import com.haocp.school_service.entities.enums.UniMain;
 import com.haocp.school_service.mapper.MajorMapper;
 import com.haocp.school_service.repositories.*;
@@ -60,6 +58,7 @@ public class MajorService {
                 major -> MajorResponse.builder()
                             .majorId(major.getMajorId())
                             .majorName(major.getMajorName())
+                            .totalUni(universityMajorRepository.findByMajorMajorId(major.getMajorId()).size())
                             .scoreOverview(null)
                             .combo(null)
                             .build()
@@ -67,7 +66,7 @@ public class MajorService {
     }
 
     public MajorResponse getMajor(Long majorId, Long universityId) {
-        List<MajorCombo> majorCombos = majorComboRepository.findMajorComboByMajorMajorId(majorId)
+        List<MajorCombo> majorCombos = majorComboRepository.findMajorComboByMajorMajorIdAndUniversityUniversityId(majorId, universityId)
                 .orElseThrow(() -> new RuntimeException("No subject combinations found for major ID: " + majorId));
 
         List<String> comboCodes = majorCombos.stream()
@@ -124,6 +123,7 @@ public class MajorService {
 
         return MajorResponse.builder()
                 .majorId(majorId)
+                .majorCode(universityMajorRepository.findByUniversityUniversityIdAndMajorMajorId(universityId, majorId).getCodeMajor())
                 .majorName(majorRepository.getReferenceById(majorId).getMajorName())
                 .scoreOverview(new ArrayList<>(responseMap.values()))
                 .combo(comboResponses)
@@ -143,11 +143,11 @@ public class MajorService {
 
     @Transactional
     public MajorComboResponse addMajorCombo(AddMajorComboRequest request) {
-        return buildMajorComboResponse(request.getUniversityId(), request.getMajorId(), request.getCodeCombinations());
+        return buildMajorComboResponse(request.getUniversityId(), request.getMajorId(), request.getCodeMajor(), request.getCodeCombinations());
     }
 
     @Transactional
-    MajorComboResponse buildMajorComboResponse(long uniId, long majorId, List<String> codeCombinations){
+    MajorComboResponse buildMajorComboResponse(long uniId, long majorId, String codeMajor,List<String> codeCombinations){
         UniversityMajor universityMajor = universityMajorRepository.findById(UniversityMajorId.builder()
                         .universityId(uniId)
                         .majorId(majorId).build())
@@ -156,6 +156,7 @@ public class MajorService {
                                 .universityId(uniId)
                                 .majorId(majorId)
                                 .build())
+                                .codeMajor(codeMajor)
                         .major(majorRepository.getReferenceById(majorId))
                         .university(uniRepository.getReferenceById(uniId))
                         .build()));
@@ -298,6 +299,88 @@ public class MajorService {
         if (major == null) {
             major = addMajor(request.getMajorName());
         }
-        return buildMajorComboResponse(universityId, major.getMajorId(), request.getCodeCombinations());
+        return buildMajorComboResponse(universityId, major.getMajorId(), request.getCodeMajor(), request.getCodeCombinations());
+    }
+
+    @Transactional
+    public MajorComboResponse updateMajorsInUniversity(Long universityId, UpdateMajorComboInUniversityRequest request) {
+        Major major = majorRepository.findByMajorName(request.getMajorName());
+        List<MajorCombo> majorCombos = majorComboRepository
+                .findMajorComboByUniversityUniversityIdAndMajorMajorIdAndSubjectCombinationCodeCombinationNotIn(universityId, major.getMajorId(), request.getCombos());
+        majorComboRepository.deleteAll(majorCombos);
+        UniversityMajor universityMajor = universityMajorRepository.findByUniversityUniversityIdAndMajorMajorId(universityId, major.getMajorId());
+        universityMajor.setCodeMajor(request.getCodeMajor());
+        universityMajorRepository.save(universityMajor);
+        for (String code : request.getCombos()){
+            if(!majorComboRepository.existsById(MajorComboId.builder()
+                            .universityId(universityId)
+                            .majorId(major.getMajorId())
+                            .codeCombination(code)
+                    .build())){
+                MajorCombo mc = MajorCombo.builder()
+                        .majorComboId(MajorComboId.builder()
+                                .universityId(universityId)
+                                .majorId(major.getMajorId())
+                                .codeCombination(code)
+                                .build())
+                        .university(uniRepository.getReferenceById(universityId))
+                        .major(major)
+                        .subjectCombination(subjectCombinationRepository.getReferenceById(code))
+                        .build();
+                majorComboRepository.save(mc);
+            }
+        }
+        return MajorComboResponse.builder()
+                .universityName(universityMajor.getUniversity().getUniversityName())
+                .majorName(universityMajor.getMajor().getMajorName())
+                .codeCombination(request.getCombos())
+                .build();
+    }
+
+    public StandardScoreResponse updateMajorScore(UpdateStandardScoreRequest request) {
+        StandardScore ss = standardScoreRepository
+                .findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdScoreTypeAndStandardScoreIdYear(
+                        request.getUniversityId(),
+                        request.getMajorId(),
+                        request.getType(),
+                        request.getYear());
+        ss.setScore(request.getScore());
+        standardScoreRepository.save(ss);
+        return StandardScoreResponse.builder()
+                .universityMajor(getUniversityMajor(UniversityMajorId.builder()
+                        .universityId(request.getUniversityId())
+                        .majorId(request.getMajorId())
+                        .build()))
+                .year(ss.getStandardScoreId().getYear())
+                .score(ss.getScore())
+                .build();
+    }
+
+    public Void deleteMajorScore(Long uniId, Long majorId, int year, ScoreType type) {
+        StandardScore ss = standardScoreRepository
+                .findStandardScoreByUniversityUniversityIdAndMajorMajorIdAndStandardScoreIdScoreTypeAndStandardScoreIdYear(
+                        uniId,
+                        majorId,
+                        type,
+                        year);
+        standardScoreRepository.delete(ss);
+        return null;
+    }
+
+    public MajorResponse deleteMajor(Long majorId) {
+        Major major = majorRepository.findById(majorId)
+                .orElseThrow(() -> new RuntimeException("Error"));
+        majorRepository.delete(major);
+        return null;
+    }
+
+    public MajorResponse updateMajor(Long majorId, UpdateMajorRequest request) {
+        Major major = majorRepository.findById(majorId)
+                .orElseThrow(() -> new RuntimeException("Error"));
+        major.setMajorName(request.getMajorName());
+
+        return MajorResponse.builder()
+                .majorName(major.getMajorName())
+                .build();
     }
 }
