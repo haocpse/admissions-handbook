@@ -12,4 +12,5 @@ public interface ScheduleService {
     ScheduleResponse updateSchedule(UpdateScheduleRequest request, long scheduleId);
     List<CountDateResponse> countDate();
     List<ScheduleResponse> getSchedule();
+    List<ScheduleResponse> getExamSchedule();
 }

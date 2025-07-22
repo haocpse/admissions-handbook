@@ -67,6 +67,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResponse> getSchedule() {
         List<Schedule> schedules = scheduleRepository.findAll();
+        return buildListScheduleResponse(schedules);
+    }
+
+    @Override
+    public List<ScheduleResponse> getExamSchedule() {
+        List<Schedule> schedules = scheduleRepository.findAllByMainSchedule(false);
+        return buildListScheduleResponse(schedules);
+    }
+
+    List<ScheduleResponse> buildListScheduleResponse(List<Schedule> schedules) {
         List<ScheduleResponse> responses = new ArrayList<>();
         for (Schedule schedule : schedules) {
             ScheduleResponse response = scheduleMapper.toScheduleResponse(schedule);
