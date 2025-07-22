@@ -1,6 +1,7 @@
 package com.haocp.school_service.services;
 
 import com.haocp.school_service.dtos.requests.CreateScheduleRequest;
+import com.haocp.school_service.dtos.requests.UpdateScheduleRequest;
 import com.haocp.school_service.dtos.responses.CountDateResponse;
 import com.haocp.school_service.dtos.responses.ScheduleResponse;
 import com.haocp.school_service.entities.Schedule;
@@ -27,15 +28,21 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponse addSchedule(CreateScheduleRequest request) {
-        Schedule schedule = scheduleRepository.findByContent(request.getContent());
-        if (schedule != null) {
-            schedule.setStartDate(request.getStartDate());
-            schedule.setEndDate(request.getEndDate());
-        } else {
-            schedule = scheduleMapper.toSchedule(request);
-            schedule.setMainSchedule(request.isMainSchedule());
-            schedule.setDisable(true);
-        }
+
+        Schedule schedule = scheduleMapper.toSchedule(request);
+        schedule.setMainSchedule(request.isMainSchedule());
+        schedule.setDisable(false);
+
+        ScheduleResponse response = scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
+        response.setMainSchedule(schedule.isMainSchedule());
+        return response;
+    }
+
+    @Override
+    public ScheduleResponse updateSchedule(UpdateScheduleRequest request, long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+        schedule = scheduleMapper.updateSchedule(request, schedule);
         ScheduleResponse response = scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
         response.setMainSchedule(schedule.isMainSchedule());
         return response;
@@ -59,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<ScheduleResponse> getSchedule() {
-        List<Schedule> schedules = scheduleRepository.findAllByMainSchedule(true);
+        List<Schedule> schedules = scheduleRepository.findAll();
         List<ScheduleResponse> responses = new ArrayList<>();
         for (Schedule schedule : schedules) {
             ScheduleResponse response = scheduleMapper.toScheduleResponse(schedule);

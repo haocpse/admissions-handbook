@@ -3,6 +3,7 @@ package com.haocp.school_service.controllers;
 import com.haocp.school_service.dtos.ApiResponse;
 import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.CreateScheduleRequest;
+import com.haocp.school_service.dtos.requests.UpdateScheduleRequest;
 import com.haocp.school_service.dtos.responses.CountDateResponse;
 import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.ScheduleResponse;
@@ -26,6 +27,13 @@ public class ScheduleController {
     public ApiResponse<ScheduleResponse> addSchedule(@RequestBody CreateScheduleRequest request) {
         return ApiResponse.<ScheduleResponse>builder()
                 .data(scheduleService.addSchedule(request))
+                .build();
+    }
+
+    @PutMapping("/schedule/{scheduleId}")
+    public ApiResponse<ScheduleResponse> updateSchedule(@RequestBody UpdateScheduleRequest request, @PathVariable long scheduleId) {
+        return ApiResponse.<ScheduleResponse>builder()
+                .data(scheduleService.updateSchedule(request, scheduleId))
                 .build();
     }
 

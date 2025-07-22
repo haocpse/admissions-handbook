@@ -1,4 +1,4 @@
-package com.haocp.school_service.dtos.responses;
+package com.haocp.school_service.dtos.requests;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,14 +9,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class ScheduleResponse {
+public class UpdateScheduleRequest {
 
-    long scheduleId;
     String content;
     LocalDateTime startDate;
     LocalDateTime endDate;
     String note;
-    boolean mainSchedule;
-
 
 }
