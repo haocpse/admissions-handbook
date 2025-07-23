@@ -89,10 +89,12 @@ public class NewServiceImpl implements NewService {
                 .collect(Collectors.toList());
 
         return NewDetailResponse.builder()
+                .newId(newsEntity.getNewId())
                 .link(newsEntity.getLink())
                 .title(newsEntity.getTitle())
                 .thumbnail(newsEntity.getThumbnail())
                 .comments(commentDetailResponse)
+                .categoryName(newsEntity.getCategory().getCategoryName())
                 .build();
     }
 
@@ -101,9 +103,11 @@ public class NewServiceImpl implements NewService {
 
         List<NewDetailResponse> newDetailResponses = newsList.stream()
                 .map(newEntity -> NewDetailResponse.builder()
+                        .newId(newEntity.getNewId())
                         .link(newEntity.getLink())
                         .title(newEntity.getTitle())
                         .thumbnail(newEntity.getThumbnail())
+                        .categoryName(newEntity.getCategory().getCategoryName())
                         .build())
                 .collect(Collectors.toList());
 

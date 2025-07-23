@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/Categories")
+@RequestMapping("/api/categories")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class CategoryController {

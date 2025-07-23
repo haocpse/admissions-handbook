@@ -12,6 +12,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class NewDetailResponse {
+    Long newId;
     String link;
     String title;
     String thumbnail;
