@@ -28,7 +28,10 @@ public class University {
     String code;
 
     @Column(nullable = false)
-    String alias;
+    String address;
+
+    @Column(nullable = false)
+    String thumbnail;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -36,6 +39,9 @@ public class University {
 
     @OneToMany(mappedBy = "university")
     List<UniversityMajor> universityMajors;
+
+    @OneToMany(mappedBy = "university")
+    List<FavoriteUniversity> favorites;
 
     @Column(nullable = false)
     boolean active = true;

@@ -14,9 +14,11 @@ import java.util.List;
 @Builder
 public class UniversityResponse {
 
+    long universityId;
     String universityName;
     String code;
-    String alias;
+    String address;
+    String thumbnail;
     UniMain main;
     List<MajorResponse> universityMajors;
 

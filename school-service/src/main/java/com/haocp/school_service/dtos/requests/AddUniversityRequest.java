@@ -4,6 +4,7 @@ import com.haocp.school_service.entities.UniversityMajor;
 import com.haocp.school_service.entities.enums.UniMain;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class AddUniversityRequest {
 
     String universityName;
     String code;
-    String alias;
+    String address;
     UniMain main;
-    List<Long> majorIds;
+    MultipartFile thumbnail;
 
 }

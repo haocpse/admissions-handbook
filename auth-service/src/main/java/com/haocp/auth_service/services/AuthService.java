@@ -3,6 +3,7 @@ package com.haocp.auth_service.services;
 import com.haocp.auth_service.dtos.requests.CreateUserRequest;
 import com.haocp.auth_service.dtos.requests.VerifyTokenRequest;
 import com.haocp.auth_service.dtos.requests.LoginRequest;
+import com.haocp.auth_service.dtos.responses.IntrospectResponse;
 import com.haocp.auth_service.dtos.responses.LoginResponse;
 import com.haocp.auth_service.dtos.responses.UserResponse;
 import com.haocp.auth_service.entities.InvalidToken;
@@ -11,7 +12,7 @@ import com.haocp.auth_service.entities.User;
 import com.haocp.auth_service.exceptions.AppException;
 import com.haocp.auth_service.exceptions.ErrorCode;
 import com.haocp.auth_service.mapper.UserMapper;
-import com.haocp.auth_service.repositories.AuthRepository;
+import com.haocp.auth_service.repositories.UserRepository;
 import com.haocp.auth_service.repositories.InvalidTokenRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -30,14 +31,13 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.StringJoiner;
 import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthService {
     @Autowired
-    AuthRepository authRepository;
+    UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Value("${jwt.signer-key}") @NonFinal
@@ -50,20 +50,27 @@ public class AuthService {
     InvalidTokenRepository invalidTokenRepository;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserServiceImpl userServiceImpl;
 
     public UserResponse register(CreateUserRequest request) {
         User user = User.builder()
                 .email(request.getEmail())
                 .username(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .updatedAt(new Date())
+                .createdAt(new Date())
                 .firstName("")
                 .lastName("")
                 .build();
-        return userMapper.toUserResponse(authRepository.save(user));
+        UserResponse response = userMapper.toUserResponse(userRepository.save(user));
+        response.setFullName(user.getFirstName() + " " + user.getLastName() );
+        return response;
     }
 
     public LoginResponse login(LoginRequest request) {
-        User user = authRepository.findByUsernameAndActive(request.getUsername(), true)
+        User user = userRepository.findByUsernameAndActive(request.getUsername(), true)
                 .orElseThrow(()-> new AppException(ErrorCode.NOT_FOUND_USER));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword()) ) {
            throw new AppException(ErrorCode.WRONG_PASSWORD); // custom loi o day
@@ -73,13 +80,16 @@ public class AuthService {
                 .build();
     }
 
-    public boolean introspect(VerifyTokenRequest request) {
+    public IntrospectResponse introspect(VerifyTokenRequest request) {
         try {
-            verifyToken(request.getToken(), false);
+            SignedJWT jwt = verifyToken(request.getToken(), false);
+            return IntrospectResponse.builder()
+                    .valid(true)
+                    .username(jwt.getJWTClaimsSet().getSubject())
+                    .build();
         } catch (ParseException | JOSEException e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }
-        return true;
     }
 
     public void logout(VerifyTokenRequest request) {
@@ -100,7 +110,7 @@ public class AuthService {
         try {
             SignedJWT signedJWT = verifyToken(request.getToken(), true);
             String username = signedJWT.getJWTClaimsSet().getSubject();
-            User user = authRepository.findByUsernameAndActive(username, true)
+            User user = userRepository.findByUsernameAndActive(username, true)
                     .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND_USER));
             return LoginResponse.builder()
                     .accessToken(generateToken(user))

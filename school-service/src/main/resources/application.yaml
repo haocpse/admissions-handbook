@@ -17,6 +17,10 @@ spring:
     password: 12345
     locations: classpath:db/migration
 
+app:
+  upload:
+    dir: D:/_My_Project/admissions-handbook/school-service/uploads
+
 server:
   port: 9001
 
