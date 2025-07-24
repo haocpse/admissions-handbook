@@ -3,6 +3,8 @@ package com.haocp.auth_service.services;
 import com.haocp.auth_service.dtos.ApiResponse;
 import com.haocp.auth_service.dtos.responses.FavoriteUniversityResponse;
 import com.haocp.auth_service.dtos.responses.UniversityResponse;
+import com.haocp.auth_service.dtos.responses.UserResponse;
+import com.haocp.auth_service.entities.User;
 import com.haocp.auth_service.exceptions.AppException;
 import com.haocp.auth_service.exceptions.ErrorCode;
 import com.haocp.auth_service.mapper.UserMapper;
@@ -50,6 +52,14 @@ public class UserServiceImpl implements UserService {
             return authentication.getName();
         }
         return null;
+    }
+
+    public UserResponse getUser(String username) {
+        User user = userRepository.findByUsernameAndActive(username, true)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+        UserResponse userResponse = userMapper.toUserResponse(user);
+        userResponse.setFullName(user.getFirstName() + " " + user.getLastName());
+        return userResponse;
     }
 
 }
