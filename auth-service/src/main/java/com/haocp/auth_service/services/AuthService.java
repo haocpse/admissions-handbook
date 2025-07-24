@@ -5,10 +5,11 @@ import com.haocp.auth_service.dtos.requests.*;
 
 public interface AuthService {
 
-    public UserResponse register(CreateUserRequest request);
-    public LoginResponse login(LoginRequest request);
-    public IntrospectResponse introspect(VerifyTokenRequest request);
-    public void logout(VerifyTokenRequest request);
-    public LoginResponse refreshToken(VerifyTokenRequest request);
+    UserResponse register(CreateUserRequest request);
+    LoginResponse login(LoginRequest request);
+    IntrospectResponse introspect(VerifyTokenRequest request);
+    void logout(VerifyTokenRequest request);
+    LoginResponse refreshToken(VerifyTokenRequest request);
 
+    LoginResponse gmailLogin(GmailLoginRequest request);
 }

@@ -1,6 +1,7 @@
 package com.haocp.auth_service.services;
 
 import com.haocp.auth_service.dtos.requests.CreateUserRequest;
+import com.haocp.auth_service.dtos.requests.GmailLoginRequest;
 import com.haocp.auth_service.dtos.requests.VerifyTokenRequest;
 import com.haocp.auth_service.dtos.requests.LoginRequest;
 import com.haocp.auth_service.dtos.responses.IntrospectResponse;
@@ -117,6 +118,29 @@ public class AuthServiceImpl implements AuthService {
         } catch (ParseException | JOSEException e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }
+    }
+
+    public LoginResponse gmailLogin(GmailLoginRequest request) {
+        String email = request.getEmail();
+        String username = request.getName();
+        User user = userRepository.findByUsernameAndActive(email, true)
+                .orElseGet(() -> {
+                    User newUser = User.builder()
+                            .email(request.getEmail())
+                            .username(request.getEmail())
+                            .password(passwordEncoder.encode("123"))
+                            .role(Role.USER)
+                            .updatedAt(new Date())
+                            .createdAt(new Date())
+                            .firstName(username)
+                            .active(true)
+                            .lastName("")
+                            .build();
+                    return userRepository.save(newUser);
+                });
+        return LoginResponse.builder()
+                .accessToken(generateToken(user))
+                .build();
     }
 
     String generateToken(User user){

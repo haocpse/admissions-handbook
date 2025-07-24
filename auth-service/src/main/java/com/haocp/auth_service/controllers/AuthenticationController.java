@@ -2,6 +2,7 @@ package com.haocp.auth_service.controllers;
 
 import com.haocp.auth_service.dtos.ApiResponse;
 import com.haocp.auth_service.dtos.requests.CreateUserRequest;
+import com.haocp.auth_service.dtos.requests.GmailLoginRequest;
 import com.haocp.auth_service.dtos.requests.VerifyTokenRequest;
 import com.haocp.auth_service.dtos.requests.LoginRequest;
 import com.haocp.auth_service.dtos.responses.IntrospectResponse;
@@ -40,9 +41,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/gmail-login")
-    public ApiResponse<LoginResponse> gmailLogin(@RequestBody LoginRequest request){
+    public ApiResponse<LoginResponse> gmailLogin(@RequestBody GmailLoginRequest request){
         return ApiResponse.<LoginResponse>builder()
-                .data(authService.login(request))
+                .data(authService.gmailLogin(request))
                 .build();
     }
 
