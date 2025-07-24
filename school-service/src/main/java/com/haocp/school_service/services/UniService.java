@@ -25,4 +25,6 @@ public interface UniService {
     UniversityResponse ratingUniversity(long universityId, RatingRequest request);
     UniversityResponse verifyUniversity(long universityId);
     UniversityResponse unVerifyUniversity(long universityId);
+
+    Boolean checkFavorite(CheckFavoriteRequest request);
 }

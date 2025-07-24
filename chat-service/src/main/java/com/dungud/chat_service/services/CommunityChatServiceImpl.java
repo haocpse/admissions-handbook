@@ -64,6 +64,8 @@ public class CommunityChatServiceImpl implements CommunityChatService {
         if (chatId == null) {
             throw new IllegalArgumentException("Invalid request: Chat ID cannot be null");
         }
+        List<CommunityChat> chats = communityChatRepository.findByParentCommunityChatId(chatId);
+        communityChatRepository.deleteAll(chats);
         communityChatRepository.deleteById(chatId);
     }
 

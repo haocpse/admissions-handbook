@@ -75,7 +75,7 @@ public class UniController {
                 .build();
     }
 
-    @GetMapping("/v1/by-score")
+    @PostMapping("/v1/by-score")
     public ApiResponse<FilteredUniversityOverviewResponse> getUniversitiesByScore(@RequestBody CheckScoreRequest request){
         return ApiResponse.<FilteredUniversityOverviewResponse>builder()
                 .data(uniService.getUniversitiesByScore(request))
@@ -110,6 +110,12 @@ public class UniController {
                 .build();
     }
 
+    @PostMapping("/v1/check-favorite")
+    public ApiResponse<Boolean> checkFavorite(@RequestBody CheckFavoriteRequest request){
+        return ApiResponse.<Boolean>builder()
+                .data(uniService.checkFavorite(request))
+                .build();
+    }
     @PostMapping("/favorite/{universityId}")
     public ApiResponse<UniversityResponse> addFavorites(@PathVariable("universityId") long universityId, @RequestHeader("X-User-Name") String username ){
         return ApiResponse.<UniversityResponse>builder()

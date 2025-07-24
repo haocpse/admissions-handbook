@@ -276,6 +276,7 @@ public class UniServiceImpl implements UniService{
         for (FavoriteUniversity favorite : favorites) {
             University university = favorite.getUniversity();
             UniversityResponse response = uniMapper.toUniversityResponse(university);
+            response.setThumbnail("http://localhost:8080/uploads/"+university.getUniversityId()+"/thumbnail/"+university.getThumbnail());
             response.setUniversityMajors(new ArrayList<>());
             responses.add(response);
         }
@@ -318,6 +319,17 @@ public class UniServiceImpl implements UniService{
         u.setVerified(false);
         uniRepository.save(u);
         return uniMapper.toUniversityResponse(u);
+    }
+
+
+    public Boolean checkFavorite(CheckFavoriteRequest request) {
+        FavoriteUniversity fu = favoriteUniversityRepository
+                .findByUsernameAndUniversityUniversityId(request.getUsername(), request.getUniversityId());
+
+        if (fu != null) {
+            return true;
+        }
+        return false;
     }
 
     public UniversityResponse addFavorites(long universityId, String username) {
