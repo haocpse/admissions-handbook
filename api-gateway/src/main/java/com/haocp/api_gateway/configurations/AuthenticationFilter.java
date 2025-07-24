@@ -41,7 +41,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             new PublicRoute("GET", "^/api/uni/v1(/.*)?$"),
             new PublicRoute("POST", "^/api/chatbot(/.*)?$"),
             new PublicRoute("POST", "/api/communityChats/create"),
-            new PublicRoute("POST", "/api/communityChats/replyChat"),
+            new PublicRoute("POST", "/api/communityChats/replyChat/.*"),
             new PublicRoute("GET", "/api/communityChats/getAllChats"),
             new PublicRoute("GET", "/api/news/.*"),
             new PublicRoute("GET", "/api/user/.*"),
