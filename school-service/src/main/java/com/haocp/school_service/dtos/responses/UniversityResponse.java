@@ -21,6 +21,7 @@ public class UniversityResponse {
     String thumbnail;
     UniMain main;
     double pointRating;
+    boolean verified;
     List<MajorResponse> universityMajors;
 
 }

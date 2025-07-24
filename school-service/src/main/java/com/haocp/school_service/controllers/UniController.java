@@ -131,4 +131,18 @@ public class UniController {
                 .build();
     }
 
+    @PutMapping("/v1/verify/{universityId}")
+    public ApiResponse<UniversityResponse> verifyUniversity(@PathVariable("universityId") long universityId){
+        return ApiResponse.<UniversityResponse>builder()
+                .data(uniService.verifyUniversity(universityId))
+                .build();
+    }
+
+    @PutMapping("/v1/un-verify/{universityId}")
+    public ApiResponse<UniversityResponse> unVerifyUniversity(@PathVariable("universityId") long universityId){
+        return ApiResponse.<UniversityResponse>builder()
+                .data(uniService.unVerifyUniversity(universityId))
+                .build();
+    }
+
 }

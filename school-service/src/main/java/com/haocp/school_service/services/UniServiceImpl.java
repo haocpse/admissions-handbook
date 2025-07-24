@@ -72,6 +72,7 @@ public class UniServiceImpl implements UniService{
         double pointRating = university.getRating() / university.getNumberOfRating();
         response.setPointRating(pointRating);
         response.setUniversityMajors(majorResponses);
+        response.setVerified(university.isVerified());
         response.setThumbnail("http://localhost:8080/uploads/"+university.getUniversityId()+"/thumbnail/"+university.getThumbnail());
         return response;
     }
@@ -122,7 +123,7 @@ public class UniServiceImpl implements UniService{
                     List<Long> majorIds = universityMajors.stream()
                             .map(um -> um.getMajor().getMajorId())
                             .toList();
-
+                    response.setVerified(university.isVerified());
                     response.setUniversityMajors(majorService.getNameMajor(majorIds));
                     return response;
                 })
@@ -302,6 +303,23 @@ public class UniServiceImpl implements UniService{
         return uniMapper.toUniversityResponse(u);
     }
 
+
+    public UniversityResponse verifyUniversity(long universityId) {
+        University u = uniRepository.findById(universityId)
+                .orElseThrow(() -> new RuntimeException("Verify university error"));
+        u.setVerified(true);
+        uniRepository.save(u);
+        return uniMapper.toUniversityResponse(u);
+    }
+
+    public UniversityResponse unVerifyUniversity(long universityId) {
+        University u = uniRepository.findById(universityId)
+                .orElseThrow(() -> new RuntimeException("Verify university error"));
+        u.setVerified(false);
+        uniRepository.save(u);
+        return uniMapper.toUniversityResponse(u);
+    }
+
     public UniversityResponse addFavorites(long universityId, String username) {
         University university = uniRepository.getReferenceById(universityId);
         favoriteUniversityRepository.save(FavoriteUniversity.builder()
@@ -351,6 +369,7 @@ public class UniServiceImpl implements UniService{
             university.setThumbnail(Objects.requireNonNull(request.getThumbnail().getOriginalFilename()).replace(" ", "_"));
             saveThumbnail(request.getThumbnail(), university.getUniversityId());
         }
+        university.setVerified(false);
         uniRepository.save(university);
         return uniMapper.toUniversityResponse(university);
     }

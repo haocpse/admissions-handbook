@@ -147,6 +147,9 @@ public class MajorServiceImpl implements MajorService {
 
     @Transactional
     MajorComboResponse buildMajorComboResponse(long uniId, long majorId, String codeMajor,List<String> codeCombinations){
+        University university = uniRepository.findById(uniId)
+                .orElseThrow(() -> new RuntimeException("University not found"));
+        university.setVerified(false);
         UniversityMajor universityMajor = universityMajorRepository.findById(UniversityMajorId.builder()
                         .universityId(uniId)
                         .majorId(majorId).build())

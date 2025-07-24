@@ -50,6 +50,9 @@ public class University {
     double rating;
 
     @Column(nullable = false)
+    boolean verified = false;
+
+    @Column(nullable = false)
     boolean active = true;
 
     @Column(nullable = false, updatable = false)

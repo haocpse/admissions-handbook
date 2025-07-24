@@ -60,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
                 .updatedAt(new Date())
                 .createdAt(new Date())
                 .firstName("")
+                .active(true)
                 .lastName("")
                 .build();
         UserResponse response = userMapper.toUserResponse(userRepository.save(user));

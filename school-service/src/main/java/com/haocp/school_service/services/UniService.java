@@ -23,4 +23,6 @@ public interface UniService {
     List<UniversityResponse> getFavorites(String username);
     UniversityResponse deleteFavorites(long universityId, String username);
     UniversityResponse ratingUniversity(long universityId, RatingRequest request);
+    UniversityResponse verifyUniversity(long universityId);
+    UniversityResponse unVerifyUniversity(long universityId);
 }
