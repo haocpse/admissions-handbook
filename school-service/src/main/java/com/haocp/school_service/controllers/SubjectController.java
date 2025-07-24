@@ -1,14 +1,13 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
-import com.haocp.school_service.dtos.requests.AddMajorRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectCombinationRequest;
 import com.haocp.school_service.dtos.requests.AddSubjectRequest;
 import com.haocp.school_service.dtos.requests.UpdateComboSubjectRequest;
-import com.haocp.school_service.dtos.responses.MajorResponse;
 import com.haocp.school_service.dtos.responses.SubjectCombinationResponse;
 import com.haocp.school_service.dtos.responses.SubjectResponse;
 import com.haocp.school_service.services.SubjectService;
+import com.haocp.school_service.services.SubjectServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +39,21 @@ public class SubjectController {
     }
 
     @GetMapping("/v1/subject-combo/{codeCombination}")
-    public ApiResponse<SubjectCombinationResponse> getSubject(@PathVariable String codeCombination){
+    public ApiResponse<SubjectCombinationResponse> getSubjectCombo(@PathVariable String codeCombination){
         return ApiResponse.<SubjectCombinationResponse>builder()
                 .data(subjectService.getComboSubject(codeCombination))
                 .build();
     }
 
     @DeleteMapping("/v1/subject-combo/{codeCombination}")
-    public ApiResponse<SubjectCombinationResponse> deleteSubject(@PathVariable String codeCombination){
+    public ApiResponse<SubjectCombinationResponse> deleteSubjectCombo(@PathVariable String codeCombination){
         return ApiResponse.<SubjectCombinationResponse>builder()
                 .data(subjectService.deleteComboSubject(codeCombination))
                 .build();
     }
 
     @PutMapping("/v1/subject-combo/{codeCombination}")
-    public ApiResponse<SubjectCombinationResponse> updateSubject(@PathVariable String codeCombination, @RequestBody UpdateComboSubjectRequest request){
+    public ApiResponse<SubjectCombinationResponse> updateSubjectCombo(@PathVariable String codeCombination, @RequestBody UpdateComboSubjectRequest request){
         return ApiResponse.<SubjectCombinationResponse>builder()
                 .data(subjectService.updateComboSubject(codeCombination, request))
                 .build();

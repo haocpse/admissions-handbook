@@ -8,6 +8,7 @@ import com.haocp.auth_service.dtos.responses.IntrospectResponse;
 import com.haocp.auth_service.dtos.responses.LoginResponse;
 import com.haocp.auth_service.dtos.responses.UserResponse;
 import com.haocp.auth_service.services.AuthService;
+import com.haocp.auth_service.services.AuthServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
