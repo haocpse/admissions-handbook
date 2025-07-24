@@ -22,6 +22,9 @@ spring:
         - id: chat-service-route
           uri: lb://CHAT-SERVICE
           predicates: Path=/api/chatbot/**
+        - id: chat-service-route
+          uri: lb://CHAT-SERVICE
+          predicates: Path=/api/communityChats/**
         - id: news-service-route
           uri: lb://NEW-SERVICE
           predicates: Path=/api/categories/**

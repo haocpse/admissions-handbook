@@ -13,7 +13,7 @@ public class ChatServiceApplication {
 
 	public static void main(String[] args) {
 		Dotenv dotenv = Dotenv.configure()
-				.directory("chat-service")  // hoặc có thể dùng đường dẫn tuyệt đối nếu cần
+				.directory("chat-service")
 				.filename(".env")
 				.load();
 

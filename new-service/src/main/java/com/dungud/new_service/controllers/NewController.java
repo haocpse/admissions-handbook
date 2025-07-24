@@ -6,12 +6,14 @@ import com.dungud.new_service.dtos.responses.NewDetailResponse;
 import com.dungud.new_service.dtos.responses.NewListResponse;
 import com.dungud.new_service.services.NewService;
 import com.dungud.new_service.services.NewServiceImpl;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/news")
-//@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewController {
     @Autowired
     private NewService newService;

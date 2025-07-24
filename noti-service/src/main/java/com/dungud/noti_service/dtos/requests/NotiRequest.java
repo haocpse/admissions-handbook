@@ -13,6 +13,7 @@ import java.util.List;
 public class NotiRequest {
     List<EmailRequest> emailRequestList;
     NotificationType notificationType;
-    String SchoolName;
+    String schoolId;
+    String schoolName;
 }
 
