@@ -1,0 +1,196 @@
+/* Prefix all selectors with .admission-schedule-viewer to avoid conflicts */
+
+.admission-schedule-viewer-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e3f0ff 0%, #f6f9ff 100%);
+    padding: 40px 0 80px 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: asv-fade-in 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Fade-in animation */
+@keyframes asv-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Animated floating icon */
+.admission-schedule-viewer-float-icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 10px;
+    animation: asv-float 2.5s ease-in-out infinite alternate;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes asv-float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-18px); }
+}
+
+.admission-schedule-viewer-title {
+    font-size: 2.3rem;
+    font-weight: 800;
+    color: #225BBF;
+    margin-bottom: 10px;
+    text-align: center;
+    letter-spacing: 1px;
+    animation: asv-fade-in 1.2s 0.2s both;
+}
+
+.admission-schedule-viewer-desc {
+    color: #4a5a7a;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 32px;
+    animation: asv-fade-in 1.2s 0.3s both;
+}
+
+.admission-schedule-viewer-search-bar {
+    max-width: 420px;
+    margin: 0 auto 32px auto;
+    display: flex;
+    gap: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(34,91,191,0.07);
+    padding: 10px 16px;
+    align-items: center;
+    animation: asv-fade-in 1.2s 0.4s both;
+}
+
+.admission-schedule-viewer-search-input {
+    flex: 1;
+    border-radius: 8px;
+    border: 1.5px solid #bcd2f7;
+    padding: 10px 14px;
+    font-size: 1.08rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #f8fbff;
+    color: #225BBF;
+}
+
+.admission-schedule-viewer-search-input:focus {
+    border-color: #225BBF;
+    box-shadow: 0 0 0 2px #cbe7ff;
+    background: #fff;
+}
+
+.admission-schedule-viewer-search-btn {
+    background: linear-gradient(90deg, #225BBF 60%, #3a8dde 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(34,91,191,0.08);
+}
+
+.admission-schedule-viewer-search-btn:hover {
+    background: linear-gradient(90deg, #174a99 60%, #225BBF 100%);
+    transform: translateY(-2px) scale(1.04);
+}
+
+.admission-schedule-viewer-table-wrapper {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(34,91,191,0.10);
+    padding: 32px 24px;
+    max-width: 1150px;
+    margin: 0 auto;
+    overflow-x: auto;
+    animation: asv-fade-in 1.2s 0.5s both;
+}
+
+.admission-schedule-viewer-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 1.07rem;
+    background: transparent;
+}
+
+.admission-schedule-viewer-table th,
+.admission-schedule-viewer-table td {
+    border: none;
+    padding: 16px 12px;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.admission-schedule-viewer-table th {
+    background: linear-gradient(90deg, #225BBF 60%, #3a8dde 100%);
+    color: #fff;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.admission-schedule-viewer-table tr {
+    border-radius: 8px;
+    transition: box-shadow 0.2s;
+}
+
+.admission-schedule-viewer-table tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+.admission-schedule-viewer-table tr:hover {
+    background: #e3f0ff;
+    box-shadow: 0 2px 12px rgba(34,91,191,0.07);
+}
+
+.admission-schedule-viewer-table td {
+    color: #2d3a4a;
+    border-bottom: 1.5px solid #e3eafc;
+}
+
+.admission-schedule-viewer-table tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 900px) {
+    .admission-schedule-viewer-table-wrapper {
+        padding: 12px 2px;
+    }
+    .admission-schedule-viewer-title {
+        font-size: 1.3rem;
+    }
+    .admission-schedule-viewer-search-bar {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 6px;
+    }
+    .admission-schedule-viewer-table th,
+    .admission-schedule-viewer-table td {
+        padding: 10px 6px;
+        font-size: 0.98rem;
+    }
+}
+
+/* Optional: subtle fade-in for each row */
+@keyframes asv-row-fade {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+.admission-schedule-viewer-table tr {
+    animation: asv-row-fade 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}

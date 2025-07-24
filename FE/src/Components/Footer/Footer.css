@@ -1,0 +1,39 @@
+.footer-img {
+    max-width: 120px;
+    height: auto;
+}
+
+.footer ul {
+    padding-left: 0;
+
+}
+
+.footer ul li {
+    margin-top: 1rem;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #849CE2;
+}
+
+.footer .arrow {
+    margin-right: 6px;
+    color: #fff;
+}
+
+.footer a {
+    text-decoration: none;
+
+}
+
+.border-start {
+    border-left: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+.footer ul li a {
+    color: #849CE2;
+}
+
+.footer ul li a:hover {
+    color: #fff; 
+    text-decoration: underline;
+}
+

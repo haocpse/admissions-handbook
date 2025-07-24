@@ -1,0 +1,97 @@
+.manage-score {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.manage-score h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #003366;
+  margin-bottom: 2rem;
+}
+
+input.form-control {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.3s;
+}
+
+input.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* .buttons .btn {
+  background-color: #003366;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 16px;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.3s;
+} */
+
+/* .buttons .btn:hover {
+  background-color: #0055aa;
+} */
+
+.card {
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #003366;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.4rem;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: #000;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pagination */
+.pagination .page-link {
+  color: #003366;
+  font-weight: 500;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #003366;
+  border-color: #003366;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination .page-link:hover {
+  background-color: #f0f0f0;
+}

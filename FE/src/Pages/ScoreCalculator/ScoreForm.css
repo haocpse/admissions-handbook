@@ -1,0 +1,220 @@
+/* Header */
+.scoreform-wrapper h2,
+.scoreform-wrapper h3,
+.scoreform-wrapper h4 {
+  color: #003366;
+  margin-bottom: 16px;
+}
+
+/* Grid layout chính */
+.scoreform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+/* Nhóm input */
+.scoreform-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  margin-bottom: 8px;
+}
+
+.scoreform-group label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #003366;
+}
+
+.scoreform-group select,
+input[type="number"] {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1.5px solid #bcd2f7;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 2px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="number"]:focus,
+.scoreform-group select:focus {
+  border-color: #225bbf;
+  box-shadow: 0 0 0 2px #cbe7ff;
+}
+
+.scoreform-checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Nút tính điểm */
+.scoreform-btn {
+  margin-top: 18px;
+  padding: 10px 22px;
+  background: linear-gradient(90deg, #225bbf 60%, #3a8dde 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(34, 91, 191, 0.08);
+}
+
+.scoreform-btn:hover {
+  background: linear-gradient(90deg, #174a99 60%, #225bbf 100%);
+  transform: translateY(-2px) scale(1.04);
+}
+
+/* Kết quả */
+.scoreform-result {
+  margin-top: 18px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #225bbf;
+}
+
+/* Bảng điểm */
+.scoreform-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.scoreform-table th,
+.scoreform-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.scoreform-table th {
+  background-color: #003366;
+  color: white;
+  font-weight: 600;
+}
+
+.scoreform-table input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Thông báo lỗi */
+.error-msg {
+  margin-top: 4px;
+  font-size: 13px;
+  color: red;
+}
+
+/* Wrapper chính */
+.scoreform-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(34, 91, 191, 0.07);
+  padding: 28px 18px;
+  margin-bottom: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scoreform-xettuyen-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.scoreform-xettuyen-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+.scoreform-xettuyen-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fbff;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 1rem;
+}
+.scoreform-xettuyen-table th,
+.scoreform-xettuyen-table td {
+  border: 1px solid #e3eafc;
+  padding: 10px 8px;
+  text-align: left;
+}
+.scoreform-xettuyen-table th {
+  background: #e3f0ff;
+  color: #225BBF;
+  font-weight: 600;
+}
+.scoreform-select {
+  background: linear-gradient(90deg, #225BBF 60%, #3a8dde 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+  margin-bottom: 2px;
+  box-shadow: 0 2px 8px rgba(34,91,191,0.08);
+}
+
+.scoreform-select:focus {
+  border: 2px solid #174a99;
+  color: #fff;
+}
+
+.scoreform-select option {
+  color: #225BBF;
+  background: #fff;
+}
+.scoreform-input {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1.5px solid #bcd2f7;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 2px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.scoreform-input:focus,
+.scoreform-select:focus {
+  border-color: #225BBF;
+  box-shadow: 0 0 0 2px #cbe7ff;
+}
+.scoreform-xettuyen-extra {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.scoreform-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #225BBF;
+}
+@media (max-width: 700px) {
+  .scoreform-xettuyen-extra {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

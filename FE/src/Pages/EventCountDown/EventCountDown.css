@@ -1,0 +1,203 @@
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.description {
+    color: #666;
+    font-size: 16px;
+}
+
+.section-title {
+    font-weight: bold;
+}
+
+.event-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.event-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.event-icon {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+}
+
+.event-info {
+    flex-grow: 1;
+    color: #282E45;
+}
+
+.event-date {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+.event-note {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.countdown-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    padding: 16px;
+    width: 120px;
+    height: 120px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.countdown-box:hover {
+    transform: scale(1.05);
+}
+
+
+.countdown-box.green {
+    background: repeating-linear-gradient(135deg,
+            #4caf50,
+            #4caf50 25%,
+            #a8e6cf 25%,
+            #a8e6cf 50%,
+            #81c784 50%,
+            #81c784 75%,
+            #dcedc8 75%,
+            #dcedc8 100%);
+    color: #fff;
+}
+
+.countdown-box.pink {
+    background: repeating-linear-gradient(135deg,
+            #f78fb3,
+            #f78fb3 25%,
+            #f8a5c2 25%,
+            #f8a5c2 50%,
+            #ffe6f0 50%,
+            #ffe6f0 75%,
+            #f3d1f4 75%,
+            #f3d1f4 100%);
+    color: #333;
+}
+
+.countdown-box.orange {
+    background: repeating-linear-gradient(135deg,
+            #f0932b,
+            #f0932b 25%,
+            #f6d365 25%,
+            #f6d365 50%,
+            #ff9a9e 50%,
+            #ff9a9e 75%,
+            #fad0c4 75%,
+            #fad0c4 100%);
+    color: #fff;
+}
+
+.countdown-box.blue {
+    background: repeating-linear-gradient(135deg,
+            #4a90e2,
+            #4a90e2 25%,
+            #50b4e6 25%,
+            #50b4e6 50%,
+            #add8e6 50%,
+            #add8e6 75%,
+            #d0e6f7 75%,
+            #d0e6f7 100%);
+    color: #333;
+}
+.countdown-box.red {
+    background: repeating-linear-gradient(135deg,
+        #e53935,
+        #e53935 25%,
+        #ef5350 25%,
+        #ef5350 50%,
+        #ef9a9a 50%,
+        #ef9a9a 75%,
+        #ffcdd2 75%,
+        #ffcdd2 100%);
+    color: #333;
+}
+.countdown-box.purple {
+    background: repeating-linear-gradient(135deg,
+        #8e24aa,
+        #8e24aa 25%,
+        #ab47bc 25%,
+        #ab47bc 50%,
+        #ce93d8 50%,
+        #ce93d8 75%,
+        #e1bee7 75%,
+        #e1bee7 100%);
+    color: #333;
+}
+
+.countdown-box.brown {
+    background: repeating-linear-gradient(135deg,
+        #6d4c41,
+        #6d4c41 25%,
+        #8d6e63 25%,
+        #8d6e63 50%,
+        #a1887f 50%,
+        #a1887f 75%,
+        #d7ccc8 75%,
+        #d7ccc8 100%);
+    color: #333;
+}
+.countdown-box.teal {
+    background: repeating-linear-gradient(135deg,
+        #00897b,
+        #00897b 25%,
+        #26a69a 25%,
+        #26a69a 50%,
+        #80cbc4 50%,
+        #80cbc4 75%,
+        #b2dfdb 75%,
+        #b2dfdb 100%);
+    color: #333;
+}
+.countdown-box.indigo {
+    background: repeating-linear-gradient(135deg,
+        #3949ab,
+        #3949ab 25%,
+        #5c6bc0 25%,
+        #5c6bc0 50%,
+        #9fa8da 50%,
+        #9fa8da 75%,
+        #c5cae9 75%,
+        #c5cae9 100%);
+    color: #333;
+}
+
+
+.countdown-box .label {
+    font-size: 16px;
+}
+
+.countdown-box .number {
+    font-size: 32px;
+    font-weight: 700;
+}

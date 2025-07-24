@@ -1,0 +1,147 @@
+.uni-compare-page {
+  min-height: 100vh;       /* ✅ Để nội dung đủ dài sẽ tự đẩy footer xuống */
+  overflow: unset;         /* ✅ Để trang cuộn tự nhiên */
+  padding: 1rem 0;
+}
+
+.uni-compare-container {
+  padding: 4rem 1.5rem 6rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: "Inter", sans-serif;
+  color: #374151;
+}
+
+.uni-compare-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #003366;
+}
+
+.uni-compare-description {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+.uni-compare-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.uni-compare-inputs input {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  width: 250px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: border 0.3s ease;
+}
+
+.uni-compare-inputs input:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.uni-comparison-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  gap: 2rem;
+}
+
+.uni-section {
+  flex: 1 1 300px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.uni-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain; /* ✅ giữ nguyên tỉ lệ */
+  border-radius: 12px;
+  background-color: white; /* nền trắng nếu logo có viền trắng */
+  padding: 8px; /* thêm khoảng trắng cho logo không bị dính viền */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+.uni-name {
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #2563eb;
+}
+
+.rating-label {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.uni-rating-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+.uni-rating-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f59e0b;
+  z-index: 1;
+  position: relative;
+}
+
+.uni-rating-wrapper::after {
+  content: "★";
+  font-size: 3rem;
+  color: rgba(255, 215, 0, 0.25);
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 0;
+  animation: sparkle 2s infinite ease-in-out;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+  50% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.compare-table th,
+.compare-table td {
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  background-color: #f9fafb;
+}
+
+.compare-table thead th {
+  background-color: #e0e7ff;
+  font-weight: 600;
+}
+
+.compare-hint {
+  text-align: center;
+  font-style: italic;
+  color: #9ca3af;
+}

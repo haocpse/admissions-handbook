@@ -1,0 +1,10 @@
+.university-detail .detail-card { width: 100%; border-radius: 8px; overflow: hidden; }
+.detail-img { width: 100%; height: 300px; object-fit: cover; }
+.detail-header h2 { font-size: 1.75rem; }
+.detail-code { font-size: 1.25rem; }
+.detail-info { font-size: 1rem; }
+.majors-section h3 { font-size: 1.5rem; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.error-message { font-size: 1.1rem; }
+.table { width: 100%; margin-top: 10px; }
+.table-primary { background-color: #cfe2ff; }

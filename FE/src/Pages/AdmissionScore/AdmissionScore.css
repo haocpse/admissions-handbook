@@ -1,0 +1,136 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure the wrapper doesn't interfere with the flex layout */
+.admission-page-wrapper {
+  padding: 4rem 1rem;
+  background-color: #f9fafb;
+  flex: 1; /* Ensure it takes available space */
+}
+
+/* Ensure footer stays at the bottom and spans full width */
+footer {
+  width: 100%;
+  background-color: #f8f9fa; /* Match your Footer component's background */
+  border-top: 1px solid #e5e7eb; /* Optional: match table border */
+}
+
+/* Inner container */
+.admission-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Title */
+.admission-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+/* Subtitle */
+.admission-subtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+/* Dropdown */
+.admission-select {
+  margin-bottom: 2rem;
+}
+
+.admission-select label {
+  font-weight: 600;
+  margin-right: 1rem;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.admission-select select {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid #d1d5db;
+  background-color: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.admission-select select:hover,
+.admission-select select:focus {
+  border-color: #6366f1;
+  outline: none;
+}
+
+/* Table */
+.admission-table-wrapper {
+  overflow-x: auto;
+}
+
+.admission-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.admission-table thead {
+  background-color: #dbeafe;
+}
+
+.admission-table thead th {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 700;
+  color: #1e3a8a;
+  border-bottom: 1px solid #c7d2fe;
+}
+
+.admission-table tbody td {
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admission-table tbody tr:hover {
+  background-color: #f0f9ff;
+}
+
+.highlight {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admission-title {
+    font-size: 2rem;
+  }
+
+  .admission-subtitle {
+    font-size: 1rem;
+  }
+
+  .admission-select select {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .admission-table thead th,
+  .admission-table tbody td {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}
