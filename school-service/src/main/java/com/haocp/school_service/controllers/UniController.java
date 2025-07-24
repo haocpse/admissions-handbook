@@ -1,10 +1,7 @@
 package com.haocp.school_service.controllers;
 
 import com.haocp.school_service.dtos.ApiResponse;
-import com.haocp.school_service.dtos.requests.AddUniversityRequest;
-import com.haocp.school_service.dtos.requests.CheckScoreRequest;
-import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
-import com.haocp.school_service.dtos.requests.UpdateUniversityRequest;
+import com.haocp.school_service.dtos.requests.*;
 import com.haocp.school_service.dtos.responses.FilteredUniversityOverviewResponse;
 import com.haocp.school_service.dtos.responses.UniversityResponse;
 import com.haocp.school_service.entities.enums.UniMain;
@@ -117,6 +114,20 @@ public class UniController {
     public ApiResponse<UniversityResponse> addFavorites(@PathVariable("universityId") long universityId, @RequestHeader("X-User-Name") String username ){
         return ApiResponse.<UniversityResponse>builder()
                 .data(uniService.addFavorites(universityId, username))
+                .build();
+    }
+
+    @DeleteMapping("/favorite/{universityId}")
+    public ApiResponse<UniversityResponse> deleteFavorites(@PathVariable("universityId") long universityId, @RequestHeader("X-User-Name") String username ){
+        return ApiResponse.<UniversityResponse>builder()
+                .data(uniService.deleteFavorites(universityId, username))
+                .build();
+    }
+
+    @PostMapping("/v1/rating/{universityId}")
+    public ApiResponse<UniversityResponse> ratingUniversity(@PathVariable("universityId") long universityId, @RequestBody RatingRequest request){
+        return ApiResponse.<UniversityResponse>builder()
+                .data(uniService.ratingUniversity(universityId, request))
                 .build();
     }
 

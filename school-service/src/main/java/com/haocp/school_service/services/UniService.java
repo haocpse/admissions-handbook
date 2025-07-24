@@ -21,4 +21,6 @@ public interface UniService {
     FilteredUniversityOverviewResponse getUniversitiesByMain(UniMain main);
     UniversityResponse updateUniversity(Long universityId, UpdateUniversityRequest request);
     List<UniversityResponse> getFavorites(String username);
+    UniversityResponse deleteFavorites(long universityId, String username);
+    UniversityResponse ratingUniversity(long universityId, RatingRequest request);
 }

@@ -10,5 +10,6 @@ import java.util.List;
 public interface FavoriteUniversityRepository extends JpaRepository<FavoriteUniversity, Long> {
 
     List<FavoriteUniversity> findByUsername(String username);
+    FavoriteUniversity findByUsernameAndUniversityUniversityId(String username, Long universityId);
 
 }

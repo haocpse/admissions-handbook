@@ -43,6 +43,12 @@ public class University {
     @OneToMany(mappedBy = "university")
     List<FavoriteUniversity> favorites;
 
+    @Column
+    int numberOfRating;
+
+    @Column
+    double rating;
+
     @Column(nullable = false)
     boolean active = true;
 

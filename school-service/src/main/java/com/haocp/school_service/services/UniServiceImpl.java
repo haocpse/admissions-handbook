@@ -2,10 +2,7 @@ package com.haocp.school_service.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.haocp.school_service.dtos.requests.AddUniversityRequest;
-import com.haocp.school_service.dtos.requests.CheckScoreRequest;
-import com.haocp.school_service.dtos.requests.UpdateMajorsOfUniRequest;
-import com.haocp.school_service.dtos.requests.UpdateUniversityRequest;
+import com.haocp.school_service.dtos.requests.*;
 import com.haocp.school_service.dtos.responses.*;
 import com.haocp.school_service.entities.*;
 import com.haocp.school_service.entities.enums.UniMain;
@@ -41,7 +38,7 @@ public class UniServiceImpl implements UniService{
     @Autowired
     UniMapper uniMapper;
     @Autowired
-    MajorServiceImpl majorService;
+    MajorService majorService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -71,6 +68,9 @@ public class UniServiceImpl implements UniService{
         for (Long id : majorIds) {
             majorResponses.add(majorService.getMajor(id, universityId));
         }
+
+        double pointRating = university.getRating() / university.getNumberOfRating();
+        response.setPointRating(pointRating);
         response.setUniversityMajors(majorResponses);
         response.setThumbnail("http://localhost:8080/uploads/"+university.getUniversityId()+"/thumbnail/"+university.getThumbnail());
         return response;
@@ -83,6 +83,8 @@ public class UniServiceImpl implements UniService{
         String fileName = Objects.requireNonNull(request.getThumbnail().getOriginalFilename()).replace(" ", "_");
         University university = uniMapper.toUniversity(request);
         university.setThumbnail(fileName);
+        university.setRating(0);
+        university.setNumberOfRating(0);
         university.setActive(true);
         University savedUniversity = uniRepository.save(university);
         saveThumbnail(request.getThumbnail(), savedUniversity.getUniversityId());
@@ -277,6 +279,27 @@ public class UniServiceImpl implements UniService{
             responses.add(response);
         }
         return responses;
+    }
+
+    public UniversityResponse deleteFavorites(long universityId, String username) {
+        FavoriteUniversity fu = favoriteUniversityRepository.findByUsernameAndUniversityUniversityId(username, universityId);
+        favoriteUniversityRepository.delete(fu);
+        return null;
+    }
+
+    public UniversityResponse ratingUniversity(long universityId, RatingRequest request) {
+        University u = uniRepository.findById(universityId)
+                .orElseThrow(() -> new RuntimeException("Rating error"));
+        int total = u.getNumberOfRating();
+        total += 1;
+
+        double rating = u.getRating();
+        rating += request.getRating();
+
+        u.setNumberOfRating(total);
+        u.setRating(rating);
+        uniRepository.save(u);
+        return uniMapper.toUniversityResponse(u);
     }
 
     public UniversityResponse addFavorites(long universityId, String username) {

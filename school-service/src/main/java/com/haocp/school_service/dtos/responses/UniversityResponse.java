@@ -20,6 +20,7 @@ public class UniversityResponse {
     String address;
     String thumbnail;
     UniMain main;
+    double pointRating;
     List<MajorResponse> universityMajors;
 
 }

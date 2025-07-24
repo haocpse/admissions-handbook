@@ -51,7 +51,7 @@ public class ScheduleController {
                 .build();
     }
 
-    @GetMapping("/exam-schedule")
+    @GetMapping("/v1/exam-schedule")
     public ApiResponse<List<ScheduleResponse>> getExamSchedule() {
         return ApiResponse.<List<ScheduleResponse>>builder()
                 .data(scheduleService.getExamSchedule())
